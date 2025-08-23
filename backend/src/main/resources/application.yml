@@ -1,0 +1,15 @@
+server:
+  port: 8083
+  servlet:
+    context-path: /product-catalog
+
+spring:
+  application:
+    name: catalog-service
+  profiles:
+    active: dev
+
+  data:
+    mongodb:
+      database: ${env.MONGO_DATABASE}
+      uri: mongodb+srv://${env.MONGO_USER}:${env.MONGO_PASSWORD}@${env.MONGO_CLUSTER}
