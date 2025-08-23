@@ -1,5 +1,62 @@
 * {
-    padding: 0px;
-    margin: 0px;
+    padding: 0;
+    margin: 0;
     box-sizing: border-box;
+}
+/* HEADER */
+.catalog__header {
+    border-bottom: 2px solid #444;
+}
+.catalog__logo {
+    width: 40px;
+    height: 40px;
+}
+.catalog__title {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+/* PRODUCT */
+.product__title-container i {
+    font-size: 1.5rem;
+    color: #0d6efd;
+}
+.product__search {
+    max-width: 250px;
+}
+.product__filter {
+    max-width: 180px;
+}
+.product__btn-create {
+    border-radius: 8px;
+}
+
+/* TABLE */
+.product__table .sortable {
+    cursor: pointer;
+}
+.product__table .sortable:hover {
+    text-decoration: underline;
+}
+
+/* CARDS (mobile view) */
+.product__cards .card {
+    margin-bottom: 1rem;
+}
+.product__cards .card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+/* PAGINATION */
+.product__pagination .page-item.active .page-link {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    color: white;
+}
+
+/* MODAL */
+.product__modal {
+    border-radius: 12px;
 }
