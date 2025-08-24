@@ -17,7 +17,6 @@ public class Product {
     ObjectId id;
     String name;
     String description;
-    double price;
+    Double price;
     String category;
 }
-
