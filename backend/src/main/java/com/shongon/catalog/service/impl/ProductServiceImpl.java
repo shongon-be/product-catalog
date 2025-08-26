@@ -74,6 +74,8 @@ public class ProductServiceImpl implements IProductService {
         Product existingProduct = productRepository.findById(objectId)
                 .orElseThrow(() -> new ProductCatalogException(ErrorCode.PRODUCT_NOT_FOUND));
 
+        validateUniqueProductName(request.getName());
+
         productMapper.updateProduct(existingProduct, request);
 
         log.info("Product updated successfully with id: {}", productId);
