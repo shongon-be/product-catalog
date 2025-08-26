@@ -36,24 +36,24 @@ public class ProductControllerTest {
     @Test
     void getAllProducts_validRequest_returnsProducts() {
         // Given
-            // Create test products
+        // Create test products
         ViewAllProductsResponse product1 = new ViewAllProductsResponse();
-            product1.setId("68aae2cfcb79c11df8cda5ed");
-            product1.setName("Test Food Product 1");
-            product1.setDescription("Test Food Description 1");
-            product1.setPrice(10.0);
-            product1.setCategory("FOOD");
+        product1.setId("68aae2cfcb79c11df8cda5ed");
+        product1.setName("Test Food Product 1");
+        product1.setDescription("Test Food Description 1");
+        product1.setPrice(10.0);
+        product1.setCategory("FOOD");
         ViewAllProductsResponse product2 = new ViewAllProductsResponse();
-            product2.setId("68aae2cfce79c11df8cda5ed");
-            product2.setName("Test Food Product 2");
-            product2.setDescription("Test Food Description 2");
-            product2.setPrice(10.0);
-            product2.setCategory("FOOD");
+        product2.setId("68aae2cfce79c11df8cda5ed");
+        product2.setName("Test Food Product 2");
+        product2.setDescription("Test Food Description 2");
+        product2.setPrice(10.0);
+        product2.setCategory("FOOD");
 
-            // Convert to Page
+        // Convert to Page
         Page<ViewAllProductsResponse> productPage = new PageImpl<>(List.of(product1, product2));
 
-            // Mock service to return test products
+        // Mock service to return test products
         Mockito.when(productService.viewAllProducts(Mockito.any()))
                 .thenReturn(productPage);
 
@@ -68,7 +68,7 @@ public class ProductControllerTest {
         assertEquals(product1, response.getResult().getContent().get(0));
         assertEquals(product2, response.getResult().getContent().get(1));
 
-            // Verify service was called
+        // Verify service was called
         Mockito.verify(productService,
                 times(1)).viewAllProducts(Mockito.any()
         );
@@ -77,7 +77,7 @@ public class ProductControllerTest {
     @Test
     void getAllProducts_validRequest_returnEmpty() {
         // Given
-            // Mock service to return an empty page
+        // Mock service to return an empty page
         Mockito.when(productService.viewAllProducts(Mockito.any()))
                 .thenReturn(Page.empty());
 
@@ -388,16 +388,17 @@ public class ProductControllerTest {
         UpdateProductResponse updatedResponse = new UpdateProductResponse();
             updatedResponse.setMessage("Update product successfully!");
 
-        when(productService.updateProduct(productId,product))
+        when(productService.updateProduct(productId, product))
                 .thenReturn(updatedResponse);
 
-        ApiResponse<UpdateProductResponse> response = productController.updateProduct(productId,product);
+        ApiResponse<UpdateProductResponse> response = productController.updateProduct(productId, product);
 
         assertEquals(200, response.getCode());
         assertEquals("Success", response.getMessage());
         assertEquals("Update product successfully!", response.getResult().getMessage());
 
-        verify(productService, times(1)).updateProduct(productId,product);
+        verify(productService, times(1))
+                .updateProduct(productId, product);
     }
 
     @Test
@@ -409,13 +410,14 @@ public class ProductControllerTest {
             product.setPrice(120.0);
             product.setCategory("FOOD");
 
-        when(productService.updateProduct(productId,product))
+        when(productService.updateProduct(productId, product))
                 .thenThrow(new ProductCatalogException(ErrorCode.PRODUCT_NOT_FOUND));
 
         assertThrows(ProductCatalogException.class,
-                () -> productController.updateProduct(productId,product));
+                () -> productController.updateProduct(productId, product));
 
-        verify(productService, times(1)).updateProduct(productId,product);
+        verify(productService, times(1))
+                .updateProduct(productId, product);
     }
 
     @Test
@@ -427,13 +429,14 @@ public class ProductControllerTest {
             product.setPrice(120.0);
             product.setCategory("FOOD");
 
-        when(productService.updateProduct(productId,product))
+        when(productService.updateProduct(productId, product))
                 .thenThrow(new IllegalArgumentException("Invalid product id"));
 
         assertThrows(IllegalArgumentException.class,
-                () -> productController.updateProduct(productId,product));
+                () -> productController.updateProduct(productId, product));
 
-        verify(productService, times(1)).updateProduct(productId,product);
+        verify(productService, times(1))
+                .updateProduct(productId, product);
     }
 
     @Test
@@ -445,13 +448,14 @@ public class ProductControllerTest {
             product.setPrice(10.0);
             product.setCategory("FOOD");
 
-        when(productService.updateProduct(productId,product))
+        when(productService.updateProduct(productId, product))
                 .thenThrow(new ConstraintViolationException("Product name must be between 2 and 100 characters", null));
 
         assertThrows(ConstraintViolationException.class,
-                () -> productController.updateProduct(productId,product));
+                () -> productController.updateProduct(productId, product));
 
-        verify(productService, times(1)).updateProduct(productId,product);
+        verify(productService, times(1))
+                .updateProduct(productId, product);
     }
 
     @Test
@@ -463,13 +467,14 @@ public class ProductControllerTest {
         product.setPrice(10.0);
         product.setCategory("FOOD");
 
-        when(productService.updateProduct(productId,product))
+        when(productService.updateProduct(productId, product))
                 .thenThrow(new ConstraintViolationException("Product name must be between 2 and 100 characters", null));
 
         assertThrows(ConstraintViolationException.class,
-                () -> productController.updateProduct(productId,product));
+                () -> productController.updateProduct(productId, product));
 
-        verify(productService, times(1)).updateProduct(productId,product);
+        verify(productService, times(1))
+                .updateProduct(productId, product);
     }
 
     @Test
@@ -481,103 +486,109 @@ public class ProductControllerTest {
         product.setPrice(10.0);
         product.setCategory("FOOD");
 
-        when(productService.updateProduct(productId,product))
+        when(productService.updateProduct(productId, product))
                 .thenThrow(new ConstraintViolationException("Product description cannot be blank", null));
 
         assertThrows(ConstraintViolationException.class,
-                () -> productController.updateProduct(productId,product));
+                () -> productController.updateProduct(productId, product));
 
-        verify(productService, times(1)).updateProduct(productId,product);
+        verify(productService, times(1))
+                .updateProduct(productId, product);
     }
 
     @Test
     void updateProduct_tooLongDescription_throwsException() {
         String productId = "68ab02d98321e47a8bae053d";
         UpdateProductRequest product = new UpdateProductRequest();
-        product.setName("Test Food Product 1");
-        product.setDescription("A comprehensive nine-step process for planning coding projects covers everything from defining project goals and target users to selecting tech stacks and deployment strategies. The methodology emphasizes starting with clear objectives, writing user stories, designing data models, ruthlessly scoping an MVP, creating simple wireframes, considering future scalability, choosing appropriate architecture, selecting the right technology stack, and following a structured development process.");
-        product.setPrice(10.0);
-        product.setCategory("FOOD");
+            product.setName("Test Food Product 1");
+            product.setDescription("A comprehensive nine-step process for planning coding projects covers everything from defining project goals and target users to selecting tech stacks and deployment strategies. The methodology emphasizes starting with clear objectives, writing user stories, designing data models, ruthlessly scoping an MVP, creating simple wireframes, considering future scalability, choosing appropriate architecture, selecting the right technology stack, and following a structured development process.");
+            product.setPrice(10.0);
+            product.setCategory("FOOD");
 
-        when(productService.updateProduct(productId,product))
+        when(productService.updateProduct(productId, product))
                 .thenThrow(new ConstraintViolationException("Description cannot exceed 500 characters", null));
 
         assertThrows(ConstraintViolationException.class,
-                () -> productController.updateProduct(productId,product));
+                () -> productController.updateProduct(productId, product));
 
-        verify(productService, times(1)).updateProduct(productId,product);
+        verify(productService, times(1))
+                .updateProduct(productId, product);
     }
 
     @Test
     void updateProduct_nullPrice_throwsException() {
         String productId = "68ab02d98321e47a8bae053d";
         UpdateProductRequest product = new UpdateProductRequest();
-        product.setName("Test Food Product 1");
-        product.setDescription("Test Food Description 1");
-        product.setPrice(null);
-        product.setCategory("FOOD");
+            product.setName("Test Food Product 1");
+            product.setDescription("Test Food Description 1");
+            product.setPrice(null);
+            product.setCategory("FOOD");
 
-        when(productService.updateProduct(productId,product))
+        when(productService.updateProduct(productId, product))
                 .thenThrow(new ConstraintViolationException("Product price cannot be null", null));
 
         assertThrows(ConstraintViolationException.class,
-                () -> productController.updateProduct(productId,product));
+                () -> productController.updateProduct(productId, product));
 
-        verify(productService, times(1)).updateProduct(productId,product);
+        verify(productService, times(1))
+                .updateProduct(productId, product);
     }
 
     @Test
     void updateProduct_nagativePrice_throwsException() {
         String productId = "68ab02d98321e47a8bae053d";
         UpdateProductRequest product = new UpdateProductRequest();
-        product.setName("Test Food Product 1");
-        product.setDescription("Test Food Description 1");
-        product.setPrice(-100.0);
-        product.setCategory("FOOD");
+            product.setName("Test Food Product 1");
+            product.setDescription("Test Food Description 1");
+            product.setPrice(-100.0);
+            product.setCategory("FOOD");
 
-        when(productService.updateProduct(productId,product))
+        when(productService.updateProduct(productId, product))
                 .thenThrow(new ConstraintViolationException("Price must be greater than 0", null));
 
         assertThrows(ConstraintViolationException.class,
-                () -> productController.updateProduct(productId,product));
+                () -> productController.updateProduct(productId, product));
 
-        verify(productService, times(1)).updateProduct(productId,product);
+        verify(productService, times(1))
+                .updateProduct(productId, product);
     }
 
     @Test
     void updateProduct_zeroPrice_throwsException() {
         String productId = "68ab02d98321e47a8bae053d";
         UpdateProductRequest product = new UpdateProductRequest();
-        product.setName("Test Food Product 1");
-        product.setDescription("Test Food Description 1");
-        product.setPrice(0.0);
-        product.setCategory("FOOD");
+            product.setName("Test Food Product 1");
+            product.setDescription("Test Food Description 1");
+            product.setPrice(0.0);
+            product.setCategory("FOOD");
 
-        when(productService.updateProduct(productId,product))
+        when(productService.updateProduct(productId, product))
                 .thenThrow(new ConstraintViolationException("Price must be greater than 0", null));
 
         assertThrows(ConstraintViolationException.class,
-                () -> productController.updateProduct(productId,product));
+                () -> productController.updateProduct(productId, product));
 
-        verify(productService, times(1)).updateProduct(productId,product);
+        verify(productService, times(1))
+                .updateProduct(productId, product);
     }
 
     @Test
     void updateProduct_exceedMaxPrice_throwsException() {
         String productId = "68ab02d98321e47a8bae053d";
         UpdateProductRequest product = new UpdateProductRequest();
-        product.setName("Test Food Product 1");
-        product.setDescription("Test Food Description 1");
-        product.setPrice(1000000.0);
-        product.setCategory("FOOD");
+            product.setName("Test Food Product 1");
+            product.setDescription("Test Food Description 1");
+            product.setPrice(1000000.0);
+            product.setCategory("FOOD");
 
-        when(productService.updateProduct(productId,product))
+        when(productService.updateProduct(productId, product))
                 .thenThrow(new ConstraintViolationException("Price cannot exceed $999,999.99", null));
 
         assertThrows(ConstraintViolationException.class,
-                () -> productController.updateProduct(productId,product));
+                () -> productController.updateProduct(productId, product));
 
-        verify(productService, times(1)).updateProduct(productId,product);
+        verify(productService, times(1))
+                .updateProduct(productId, product);
     }
 
     @Test
@@ -589,30 +600,32 @@ public class ProductControllerTest {
         product.setPrice(1.0);
         product.setCategory("");
 
-        when(productService.updateProduct(productId,product))
+        when(productService.updateProduct(productId, product))
                 .thenThrow(new ConstraintViolationException("Product category cannot be blank", null));
 
         assertThrows(ConstraintViolationException.class,
-                () -> productController.updateProduct(productId,product));
+                () -> productController.updateProduct(productId, product));
 
-        verify(productService, times(1)).updateProduct(productId,product);
+        verify(productService, times(1))
+                .updateProduct(productId, product);
     }
 
     void updateProduct_invalidCategory_throwsException() {
         String productId = "68ab02d98321e47a8bae053d";
         UpdateProductRequest product = new UpdateProductRequest();
-        product.setName("Test Food Product 1");
-        product.setDescription("Test Food Description 1");
-        product.setPrice(1.0);
-        product.setCategory("TOY");
+            product.setName("Test Food Product 1");
+            product.setDescription("Test Food Description 1");
+            product.setPrice(1.0);
+            product.setCategory("TOY");
 
-        when(productService.updateProduct(productId,product))
+        when(productService.updateProduct(productId, product))
                 .thenThrow(new ConstraintViolationException("Category must be one of: ELECTRONICS, CLOTHING, FOOD, BOOKS, HOME, PREMIUM", null));
 
         assertThrows(ConstraintViolationException.class,
-                () -> productController.updateProduct(productId,product));
+                () -> productController.updateProduct(productId, product));
 
-        verify(productService, times(1)).updateProduct(productId,product);
+        verify(productService, times(1))
+                .updateProduct(productId, product);
     }
 
     // Delete
