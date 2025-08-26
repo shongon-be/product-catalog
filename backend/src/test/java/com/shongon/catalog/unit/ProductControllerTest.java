@@ -1,5 +1,6 @@
-package com.shongon.catalog.controller;
+package com.shongon.catalog.unit;
 
+import com.shongon.catalog.controller.ProductController;
 import com.shongon.catalog.dto.request.CreateProductRequest;
 import com.shongon.catalog.dto.request.UpdateProductRequest;
 import com.shongon.catalog.dto.response.*;
