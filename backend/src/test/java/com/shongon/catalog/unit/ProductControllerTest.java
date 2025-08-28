@@ -610,6 +610,7 @@ public class ProductControllerTest {
                 .updateProduct(productId, product);
     }
 
+    @Test
     void updateProduct_invalidCategory_throwsException() {
         String productId = "68ab02d98321e47a8bae053d";
         UpdateProductRequest product = new UpdateProductRequest();
