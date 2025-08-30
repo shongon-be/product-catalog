@@ -336,7 +336,8 @@ public class ProductIntegrationTest {
             mockMvc.perform(delete(PRODUCT_BY_ID_URL, VALID_PRODUCT_ID)
                             .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.code").value(204));
+                    .andExpect(jsonPath("$.code").value(200))
+                    .andExpect(jsonPath("$.message").value("Success"));
         }
 
         @Test
