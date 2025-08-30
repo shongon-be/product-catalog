@@ -347,7 +347,7 @@ public class ProductControllerTest {
 
         ApiResponse<Void> response = productController.deleteProduct(VALID_ID);
 
-        assertEquals(204, response.getCode());
+        assertEquals(200, response.getCode());
         assertEquals("Success", response.getMessage());
         verify(productService).deleteProduct(VALID_ID);
     }

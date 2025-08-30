@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -38,6 +39,7 @@ public class ProductController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<CreateProductResponse> createProduct(
             @RequestBody @Valid CreateProductRequest request
     ) {
@@ -65,7 +67,7 @@ public class ProductController {
         productService.deleteProduct(productId);
 
         return ApiResponse.<Void>builder()
-                .code(204)
+                .code(200)
                 .message("Success")
                 .build();
     }

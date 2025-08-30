@@ -42,8 +42,7 @@ public class ProductServiceImpl implements IProductService {
     @Override
     @Transactional(readOnly = true)
     public GetProductResponse getProductById(String productId) {
-        // Convert String to ObjectId
-        ObjectId objectId = new ObjectId(productId);
+        ObjectId objectId = convertToObjectId(productId);
 
         return productRepository.findById(objectId)
                 .map(productMapper::toGetProductResponse)
@@ -69,12 +68,13 @@ public class ProductServiceImpl implements IProductService {
     public UpdateProductResponse updateProduct(String productId, UpdateProductRequest request) {
         log.info("Updating product with id: {}", productId);
 
-        ObjectId objectId = new ObjectId(productId);
+        ObjectId objectId = convertToObjectId(productId);
 
         Product existingProduct = productRepository.findById(objectId)
                 .orElseThrow(() -> new ProductCatalogException(ErrorCode.PRODUCT_NOT_FOUND));
 
-        validateUniqueProductName(request.getName());
+        if (!existingProduct.getName().equals(request.getName()) && productRepository.existsByName(request.getName()))
+            throw new ProductCatalogException(ErrorCode.PRODUCT_ALREADY_EXISTS);
 
         productMapper.updateProduct(existingProduct, request);
 
@@ -85,16 +85,22 @@ public class ProductServiceImpl implements IProductService {
     @Override
     @Transactional
     public void deleteProduct(String productId) {
-        Product productToDelete = productRepository.findById(new ObjectId(productId))
+        ObjectId objectId = convertToObjectId(productId);
+
+        Product productToDelete = productRepository.findById(objectId)
                 .orElseThrow(() -> new ProductCatalogException(ErrorCode.PRODUCT_NOT_FOUND));
 
         productRepository.delete(productToDelete);
         log.info("Product deleted successfully with id: {}", productId);
     }
 
-    private void validateUniqueProductName(String productName){
-        if(productRepository.existsByName(productName)){
+    private void validateUniqueProductName(String productName) {
+        if (productRepository.existsByName(productName)) {
             throw new ProductCatalogException(ErrorCode.PRODUCT_ALREADY_EXISTS);
         }
+    }
+
+    private ObjectId convertToObjectId(String productId) {
+        return new ObjectId(productId);
     }
 }
