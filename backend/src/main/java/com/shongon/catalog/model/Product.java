@@ -4,6 +4,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "products")
@@ -17,6 +18,10 @@ public class Product {
     ObjectId id;
     String name;
     String description;
+
+    @Indexed
     Double price;
+
+    @Indexed
     String category;
 }
