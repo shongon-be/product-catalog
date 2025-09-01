@@ -185,7 +185,7 @@ public class ProductIntegrationTest {
             mockMvc.perform(post(PRODUCTS_URL)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(request)))
-                    .andExpect(status().isOk())
+                    .andExpect(status().isCreated())
                     .andExpect(jsonPath("$.code").value(201))
                     .andExpect(jsonPath("$.result.message").value("Create product successfully!"));
         }
@@ -318,6 +318,28 @@ public class ProductIntegrationTest {
                             .content(objectMapper.writeValueAsString(request)))
                     .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.errors").value("Invalid productId format. Must be a valid Mongo ObjectId"));
+        }
+
+        @Test
+        @DisplayName("Should return 409 when updating product with duplicate name")
+        void whenDuplicateName_return409() throws Exception {
+            Product existingProduct = createSampleProduct(VALID_PRODUCT_ID, "Original Product");
+            Product savedProduct = createSampleProduct(new ObjectId().toString(), "Sample Product");
+            productRepository.save(existingProduct);
+            productRepository.save(savedProduct);
+
+            UpdateProductRequest request = new UpdateProductRequest();
+                request.setName("Sample Product");
+                request.setDescription("Sample Description");
+                request.setPrice(10.0);
+                request.setCategory("FOOD");
+
+            mockMvc.perform(put(PRODUCTS_URL + "/" + existingProduct.getId())
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)))
+                    .andExpect(status().isConflict())
+                    .andExpect(jsonPath("$.code").value(409))
+                    .andExpect(jsonPath("$.errors[0]").value("Product already exists"));
         }
     }
 
