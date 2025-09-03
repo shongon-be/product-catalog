@@ -19,16 +19,19 @@
       <option name="ignoredModules">
         <list>
           <option value="backend" />
+          <option value="backend" />
         </list>
       </option>
       <option name="ignoredPackages">
         <list>
           <option value="org.apache.commons:commons-compress:1.24.0" />
+          <option value="org.apache.commons:commons-lang3:3.17.0" />
         </list>
       </option>
       <option name="ignoredReasons">
         <list>
           <option value="Not exploitable" />
+          <option value="In progress" />
         </list>
       </option>
     </inspection_tool>

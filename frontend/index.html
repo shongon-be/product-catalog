@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product Catalog</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="./style.css">
 </head>
 
 <body class="catalog">
@@ -36,6 +37,12 @@
                     <select id="filter-category" class="form-select product__filter">
                         <option value="">All Categories</option>
                     </select>
+                    <select id="page-size" class="form-select product__page-size" style="width:auto;">
+                        <option value="10">10</option>
+                        <option value="20" selected>20</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
                 </div>
                 <button id="btn-create" class="btn btn-primary product__btn-create">+ Create</button>
             </div>
@@ -46,9 +53,13 @@
                     <thead>
                         <tr>
                             <th scope="col">#</th>
-                            <th scope="col" id="sort-name" class="sortable">Name</th>
+                            <th scope="col" id="sort-name" class="sortable">
+                                Name <i id="icon-name" class="fas fa-sort"></i>
+                            </th>
                             <th scope="col">Description</th>
-                            <th scope="col" id="sort-price" class="sortable">Price</th>
+                            <th scope="col" id="sort-price" class="sortable">
+                                Price <i id="icon-price" class="fas fa-sort"></i>
+                            </th>
                             <th scope="col">Category</th>
                             <th scope="col">Action</th>
                         </tr>
@@ -74,7 +85,8 @@
                     <!-- Pagination dynamically rendered -->
                 </ul>
             </nav>
-
+            <!-- PRODUCT INFO -->
+            <div id="product-info" class="text-center text-muted mt-2"></div>
         </section>
 
         <!-- CREATE/UPDATE FORM (Modal) -->
@@ -97,7 +109,7 @@
                             </div>
                             <div class="mb-3">
                                 <label for="product-price" class="form-label">Price</label>
-                                <input type="number" id="product-price" class="form-control" required>
+                                <input type="number" id="product-price" class="form-control" step="0.01" required>
                             </div>
                             <div class="mb-3">
                                 <label for="product-category" class="form-label">Category</label>
@@ -123,6 +135,7 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="./app.js"></script>
 </body>
 
 </html>
