@@ -13,14 +13,18 @@ Backend API for managing product catalogs, providing filtering, sorting, and sea
 ---
 
 ## 🛠️ Tech Stack
-- Backend: Java 17, Spring Boot, Spring Data - MongoDB, Spring Validation
-- Database: MongoDB
-- Other: Lombok, MapStruct, JUnit/Mockito, Test Containers
+- Backend: Java 17, Spring Boot, Spring Data - MongoDB, Spring Validation.
+- Database: MongoDB.
+- Other: Lombok, MapStruct, JUnit/Mockito, Test Containers.
 
 ---
 
 ## 📐 Architecture
-- Pattern: layered (controller → service → repository)
+- **Pattern**: layered (controller → service → repository).
+- Controller Layer: Handle REST endpoints.
+- Service Layer: Business logic (filtering, sorting).
+- Repository Layer: Data persistence (MongoDB).
+- Mapper Layer: DTO ↔ Entity conversion using MapStruct.
 - Diagram:
 
 <p align="center">
@@ -48,6 +52,7 @@ Backend API for managing product catalogs, providing filtering, sorting, and sea
     ./mvnw clean install
     ./mvnw spring-boot:run
 ```
+UI will be available at: http://127.0.0.1:5500/frontend/index.html
 
 API will be available at: http://localhost:8083/product-catalog/
 
@@ -55,7 +60,16 @@ API will be available at: http://localhost:8083/product-catalog/
 
 ## 📖 API Documentation
 
-See details at [API-DOCS.md](./API-DOCS.md)
+See details at [API-DOCS.md](docs/API-DOCS.md)
+
+---
+
+## 📊 Diagrams
+### Filter & Sort Products (Business Flow)
+<p align="center">
+  <img src="docs/img/sq-filter-sort.png" alt="Sequence Diagram Filter & Sort Products" height="350"><br>
+  <i>Sequence diagram showing request flow from Controller → Service → Repository</i>
+</p>
 
 ---
 
@@ -71,10 +85,10 @@ See details at [API-DOCS.md](./API-DOCS.md)
 
 ## 🗺️ Roadmap  
 
-- [ ] Implement caching with **Redis** for `viewAllProducts` endpoint  
-- [ ] Integrate **Elasticsearch** for advanced product search  
-- [ ] Dockerize application with **Docker** & **Docker Compose**  
-- [ ] Deploy containerized project to **Railway** / **Render** / **AWS ECS** (after Dockerization)  
+- [ ] Implement caching with **Redis** for `viewAllProducts` endpoint.
+- [ ] Integrate **Elasticsearch** for advanced product search.  
+- [ ] Dockerize application with **Docker** & **Docker Compose**.  
+- [ ] Deploy containerized project to **Railway** / **Render** / **AWS ECS** (after Dockerization).  
 
 ---
 
