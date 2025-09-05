@@ -1,0 +1,13 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://localhost:27019/testdb?authSource=admin
+
+logging:
+  level:
+    org.springframework.data.mongodb: DEBUG
+    com.shongon.catalog: DEBUG
+
+test:
+  cleanup:
+    enabled: true
