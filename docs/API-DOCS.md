@@ -2,9 +2,9 @@
 
 # 📌 Product Catalog API
 
-**Backend**: Spring Boot 3, Maven.
+**Backend**: Spring Boot 3, Maven, Spring Validation.
 
-**Database**: MongoDB, Elasticsearch (search-engine).
+**Database**: MongoDB.
 
 **Tool test**: Postman.
 
