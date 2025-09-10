@@ -2,10 +2,14 @@ package com.shongon.catalog.dto.request;
 
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.prefs.Preferences;
+
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateProductRequest {

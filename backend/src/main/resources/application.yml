@@ -21,4 +21,4 @@ spring:
       type: redis
 
 app:
-  cache-prefix: "pc:"
+  cache-prefix: "product-catalog:"
