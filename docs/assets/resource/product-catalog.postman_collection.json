@@ -1,0 +1,1691 @@
+{
+	"info": {
+		"_postman_id": "12c558e6-df70-45de-b545-01af272c600b",
+		"name": "Product Catalog",
+		"description": "The \"Product Catalog\" collection is a set of APIs used to manage a product catalog. These APIs allow for basic and advanced operations to interact with product data, including viewing, adding, updating, deleting, and searching for products.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38175419",
+		"_collection_link": "https://shongon-be.postman.co/workspace/8c805bce-9ecd-42cc-857b-4eef3db9fc66/collection/38175419-12c558e6-df70-45de-b545-01af272c600b?action=share&source=collection_link&creator=38175419"
+	},
+	"item": [
+		{
+			"name": "CRUD Product",
+			"item": [
+				{
+					"name": "Get Product By ProductID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{product-catalog}}/products/productId",
+							"host": [
+								"{{product-catalog}}"
+							],
+							"path": [
+								"products",
+								"productId"
+							]
+						},
+						"description": "- This API is used to retrieve detailed information of a specific product by using its **`productId`**.\n    \n- This request includes test cases for a valid `productId`, an invalid `productId` (incorrect format), and a `productId` that does not find a product."
+					},
+					"response": [
+						{
+							"name": "Get Product By ProductID - Valid",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{product-catalog}}/products/68ad8b8f1f76bd5e1eb753b9",
+									"host": [
+										"{{product-catalog}}"
+									],
+									"path": [
+										"products",
+										"68ad8b8f1f76bd5e1eb753b9"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "{\r\n    \"code\": 200,\r\n    \"message\": \"Success\",\r\n    \"result\": {\r\n        \"id\": \"68ad8b8f1f76bd5e1eb753b9\",\r\n        \"name\": \"iPhone 15 Pro\",\r\n        \"description\": \"Apple flagship smartphone with A17 chip\",\r\n        \"price\": 1299.99,\r\n        \"category\": \"ELECTRONICS\"\r\n    }\r\n}"
+						},
+						{
+							"name": "Get Product By ProductID - Invalid ProductID",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{product-catalog}}/products/66aaa1111111111111111",
+									"host": [
+										"{{product-catalog}}"
+									],
+									"path": [
+										"products",
+										"66aaa1111111111111111"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "{\r\n    \"code\": 400,\r\n    \"errors\": [\r\n        \"Invalid productId format. Must be a valid Mongo ObjectId\"\r\n    ]\r\n}"
+						},
+						{
+							"name": "Get Product By ProductID - ProductID not found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{product-catalog}}/products/68aaee0ad86372261d4b5e4e",
+									"host": [
+										"{{product-catalog}}"
+									],
+									"path": [
+										"products",
+										"68aaee0ad86372261d4b5e4e"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "{\r\n    \"code\": 404,\r\n    \"errors\": [\r\n        \"Product not found\"\r\n    ]\r\n}"
+						}
+					]
+				},
+				{
+					"name": "View All Products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{product-catalog}}/products",
+							"host": [
+								"{{product-catalog}}"
+							],
+							"path": [
+								"products"
+							]
+						},
+						"description": "- This API is used to retrieve a list of all products in the system.\n    \n- This request tests both cases where products are returned and where no products are returned."
+					},
+					"response": [
+						{
+							"name": "View All Products - Valid -Return Products - MISS",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{product-catalog}}/products",
+									"host": [
+										"{{product-catalog}}"
+									],
+									"path": [
+										"products"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "{\r\n    \"code\": 200,\r\n    \"message\": \"Success\",\r\n    \"result\": {\r\n        \"content\": [\r\n            {\r\n                \"id\": \"68b8287575f12411b315046d\",\r\n                \"name\": \"Sony WH-1000XM5\",\r\n                \"description\": \"Noise cancelling wireless headphones\",\r\n                \"price\": 399.99,\r\n                \"category\": \"ELECTRONICS\"\r\n            },\r\n            {\r\n                \"id\": \"68b8287575f12411b315046e\",\r\n                \"name\": \"Dell XPS 13\",\r\n                \"description\": \"Premium ultrabook laptop\",\r\n                \"price\": 1499.99,\r\n                \"category\": \"ELECTRONICS\"\r\n            },\r\n            {\r\n                \"id\": \"68b8287575f12411b3150470\",\r\n                \"name\": \"Nintendo Switch OLED\",\r\n                \"description\": \"Portable gaming console\",\r\n                \"price\": 349.99,\r\n                \"category\": \"ELECTRONICS\"\r\n            },\r\n            {\r\n                \"id\": \"68b8287575f12411b3150475\",\r\n                \"name\": \"Google Pixel 8 Pro\",\r\n                \"description\": \"Smartphone with advanced AI features\",\r\n                \"price\": 999.99,\r\n                \"category\": \"ELECTRONICS\"\r\n            },\r\n            {\r\n                \"id\": \"68b8287575f12411b315047f\",\r\n                \"name\": \"Samsung Galaxy Tab S9\",\r\n                \"description\": \"Android tablet with S Pen support\",\r\n                \"price\": 799.99,\r\n                \"category\": \"ELECTRONICS\"\r\n            },\r\n            {\r\n                \"id\": \"68b8287575f12411b3150481\",\r\n                \"name\": \"JBL Flip 6\",\r\n                \"description\": \"Portable waterproof Bluetooth speaker\",\r\n                \"price\": 129.99,\r\n                \"category\": \"ELECTRONICS\"\r\n            },\r\n            {\r\n                \"id\": \"68b8287575f12411b3150485\",\r\n                \"name\": \"WD My Passport 2TB\",\r\n                \"description\": \"External hard drive\",\r\n                \"price\": 79.99,\r\n                \"category\": \"ELECTRONICS\"\r\n            },\r\n            {\r\n                \"id\": \"68b8287575f12411b3150486\",\r\n                \"name\": \"Apple AirPods Pro 2\",\r\n                \"description\": \"Wireless earbuds with spatial audio\",\r\n                \"price\": 249.99,\r\n                \"category\": \"ELECTRONICS\"\r\n            },\r\n            {\r\n                \"id\": \"68b8287575f12411b315048a\",\r\n                \"name\": \"Samsung Galaxy Watch 6\",\r\n                \"description\": \"Smartwatch with sleep tracking\",\r\n                \"price\": 299.99,\r\n                \"category\": \"ELECTRONICS\"\r\n            },\r\n            {\r\n                \"id\": \"68b8287575f12411b315048e\",\r\n                \"name\": \"Epson EcoTank ET-2800\",\r\n                \"description\": \"Cartridge-free all-in-one printer\",\r\n                \"price\": 279.99,\r\n                \"category\": \"ELECTRONICS\"\r\n            },\r\n            {\r\n                \"id\": \"68b8287575f12411b3150490\",\r\n                \"name\": \"Nike Air Force 1\",\r\n                \"description\": \"Iconic white sneakers\",\r\n                \"price\": 120.0,\r\n                \"category\": \"CLOTHING\"\r\n            },\r\n            {\r\n                \"id\": \"68b8287575f12411b3150493\",\r\n                \"name\": \"Zara Blazer\",\r\n                \"description\": \"Slim-fit formal blazer\",\r\n                \"price\": 149.99,\r\n                \"category\": \"CLOTHING\"\r\n            },\r\n            {\r\n                \"id\": \"68b8287575f12411b3150494\",\r\n                \"name\": \"H&M Hoodie\",\r\n                \"description\": \"Casual cotton hoodie\",\r\n                \"price\": 39.99,\r\n                \"category\": \"CLOTHING\"\r\n            },\r\n            {\r\n                \"id\": \"68b8287575f12411b3150498\",\r\n                \"name\": \"Columbia Hiking Pants\",\r\n                \"description\": \"Durable outdoor pants\",\r\n                \"price\": 69.99,\r\n                \"category\": \"CLOTHING\"\r\n            },\r\n            {\r\n                \"id\": \"68b8287575f12411b3150499\",\r\n                \"name\": \"Vans Old Skool\",\r\n                \"description\": \"Classic skate shoe\",\r\n                \"price\": 75.0,\r\n                \"category\": \"CLOTHING\"\r\n            },\r\n            {\r\n                \"id\": \"68b8287575f12411b315049a\",\r\n                \"name\": \"Patagonia Fleece Jacket\",\r\n                \"description\": \"Warm and sustainable jacket\",\r\n                \"price\": 139.0,\r\n                \"category\": \"CLOTHING\"\r\n            },\r\n            {\r\n                \"id\": \"68b8287575f12411b315049c\",\r\n                \"name\": \"Brooks Brothers Oxford Shirt\",\r\n                \"description\": \"Classic button-down shirt\",\r\n                \"price\": 98.0,\r\n                \"category\": \"CLOTHING\"\r\n            },\r\n            {\r\n                \"id\": \"68b8287575f12411b31504a0\",\r\n                \"name\": \"Dr. Martens 1460 Boots\",\r\n                \"description\": \"Leather combat boots\",\r\n                \"price\": 150.0,\r\n                \"category\": \"CLOTHING\"\r\n            },\r\n            {\r\n                \"id\": \"68b8287575f12411b31504a1\",\r\n                \"name\": \"Levi's Trucker Jacket\",\r\n                \"description\": \"Classic denim jacket\",\r\n                \"price\": 98.0,\r\n                \"category\": \"CLOTHING\"\r\n            },\r\n            {\r\n                \"id\": \"68b8287575f12411b31504a9\",\r\n                \"name\": \"J.Crew Field Jacket\",\r\n                \"description\": \"Military-inspired jacket\",\r\n                \"price\": 159.0,\r\n                \"category\": \"CLOTHING\"\r\n            }\r\n        ],\r\n        \"pageable\": {\r\n            \"pageNumber\": 0,\r\n            \"pageSize\": 20,\r\n            \"sort\": {\r\n                \"empty\": true,\r\n                \"sorted\": false,\r\n                \"unsorted\": true\r\n            },\r\n            \"offset\": 0,\r\n            \"paged\": true,\r\n            \"unpaged\": false\r\n        },\r\n        \"last\": false,\r\n        \"totalElements\": 220,\r\n        \"totalPages\": 11,\r\n        \"size\": 20,\r\n        \"number\": 0,\r\n        \"sort\": {\r\n            \"empty\": true,\r\n            \"sorted\": false,\r\n            \"unsorted\": true\r\n        },\r\n        \"first\": true,\r\n        \"numberOfElements\": 20,\r\n        \"empty\": false\r\n    }\r\n}"
+						},
+						{
+							"name": "View All Products - Valid -Return Products - HIT",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{product-catalog}}/products",
+									"host": [
+										"{{product-catalog}}"
+									],
+									"path": [
+										"products"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "{\r\n    \"code\": 200,\r\n    \"message\": \"Success (Cached)\",\r\n    \"result\": {\r\n        \"content\": [\r\n            {\r\n                \"id\": \"68b8287575f12411b315046d\",\r\n                \"name\": \"Sony WH-1000XM5\",\r\n                \"description\": \"Noise cancelling wireless headphones\",\r\n                \"price\": 399.99,\r\n                \"category\": \"ELECTRONICS\"\r\n            },\r\n            {\r\n                \"id\": \"68b8287575f12411b315046e\",\r\n                \"name\": \"Dell XPS 13\",\r\n                \"description\": \"Premium ultrabook laptop\",\r\n                \"price\": 1499.99,\r\n                \"category\": \"ELECTRONICS\"\r\n            },\r\n            {\r\n                \"id\": \"68b8287575f12411b3150470\",\r\n                \"name\": \"Nintendo Switch OLED\",\r\n                \"description\": \"Portable gaming console\",\r\n                \"price\": 349.99,\r\n                \"category\": \"ELECTRONICS\"\r\n            },\r\n            {\r\n                \"id\": \"68b8287575f12411b3150475\",\r\n                \"name\": \"Google Pixel 8 Pro\",\r\n                \"description\": \"Smartphone with advanced AI features\",\r\n                \"price\": 999.99,\r\n                \"category\": \"ELECTRONICS\"\r\n            },\r\n            {\r\n                \"id\": \"68b8287575f12411b315047f\",\r\n                \"name\": \"Samsung Galaxy Tab S9\",\r\n                \"description\": \"Android tablet with S Pen support\",\r\n                \"price\": 799.99,\r\n                \"category\": \"ELECTRONICS\"\r\n            },\r\n            {\r\n                \"id\": \"68b8287575f12411b3150481\",\r\n                \"name\": \"JBL Flip 6\",\r\n                \"description\": \"Portable waterproof Bluetooth speaker\",\r\n                \"price\": 129.99,\r\n                \"category\": \"ELECTRONICS\"\r\n            },\r\n            {\r\n                \"id\": \"68b8287575f12411b3150485\",\r\n                \"name\": \"WD My Passport 2TB\",\r\n                \"description\": \"External hard drive\",\r\n                \"price\": 79.99,\r\n                \"category\": \"ELECTRONICS\"\r\n            },\r\n            {\r\n                \"id\": \"68b8287575f12411b3150486\",\r\n                \"name\": \"Apple AirPods Pro 2\",\r\n                \"description\": \"Wireless earbuds with spatial audio\",\r\n                \"price\": 249.99,\r\n                \"category\": \"ELECTRONICS\"\r\n            },\r\n            {\r\n                \"id\": \"68b8287575f12411b315048a\",\r\n                \"name\": \"Samsung Galaxy Watch 6\",\r\n                \"description\": \"Smartwatch with sleep tracking\",\r\n                \"price\": 299.99,\r\n                \"category\": \"ELECTRONICS\"\r\n            },\r\n            {\r\n                \"id\": \"68b8287575f12411b315048e\",\r\n                \"name\": \"Epson EcoTank ET-2800\",\r\n                \"description\": \"Cartridge-free all-in-one printer\",\r\n                \"price\": 279.99,\r\n                \"category\": \"ELECTRONICS\"\r\n            },\r\n            {\r\n                \"id\": \"68b8287575f12411b3150490\",\r\n                \"name\": \"Nike Air Force 1\",\r\n                \"description\": \"Iconic white sneakers\",\r\n                \"price\": 120.0,\r\n                \"category\": \"CLOTHING\"\r\n            },\r\n            {\r\n                \"id\": \"68b8287575f12411b3150493\",\r\n                \"name\": \"Zara Blazer\",\r\n                \"description\": \"Slim-fit formal blazer\",\r\n                \"price\": 149.99,\r\n                \"category\": \"CLOTHING\"\r\n            },\r\n            {\r\n                \"id\": \"68b8287575f12411b3150494\",\r\n                \"name\": \"H&M Hoodie\",\r\n                \"description\": \"Casual cotton hoodie\",\r\n                \"price\": 39.99,\r\n                \"category\": \"CLOTHING\"\r\n            },\r\n            {\r\n                \"id\": \"68b8287575f12411b3150498\",\r\n                \"name\": \"Columbia Hiking Pants\",\r\n                \"description\": \"Durable outdoor pants\",\r\n                \"price\": 69.99,\r\n                \"category\": \"CLOTHING\"\r\n            },\r\n            {\r\n                \"id\": \"68b8287575f12411b3150499\",\r\n                \"name\": \"Vans Old Skool\",\r\n                \"description\": \"Classic skate shoe\",\r\n                \"price\": 75.0,\r\n                \"category\": \"CLOTHING\"\r\n            },\r\n            {\r\n                \"id\": \"68b8287575f12411b315049a\",\r\n                \"name\": \"Patagonia Fleece Jacket\",\r\n                \"description\": \"Warm and sustainable jacket\",\r\n                \"price\": 139.0,\r\n                \"category\": \"CLOTHING\"\r\n            },\r\n            {\r\n                \"id\": \"68b8287575f12411b315049c\",\r\n                \"name\": \"Brooks Brothers Oxford Shirt\",\r\n                \"description\": \"Classic button-down shirt\",\r\n                \"price\": 98.0,\r\n                \"category\": \"CLOTHING\"\r\n            },\r\n            {\r\n                \"id\": \"68b8287575f12411b31504a0\",\r\n                \"name\": \"Dr. Martens 1460 Boots\",\r\n                \"description\": \"Leather combat boots\",\r\n                \"price\": 150.0,\r\n                \"category\": \"CLOTHING\"\r\n            },\r\n            {\r\n                \"id\": \"68b8287575f12411b31504a1\",\r\n                \"name\": \"Levi's Trucker Jacket\",\r\n                \"description\": \"Classic denim jacket\",\r\n                \"price\": 98.0,\r\n                \"category\": \"CLOTHING\"\r\n            },\r\n            {\r\n                \"id\": \"68b8287575f12411b31504a9\",\r\n                \"name\": \"J.Crew Field Jacket\",\r\n                \"description\": \"Military-inspired jacket\",\r\n                \"price\": 159.0,\r\n                \"category\": \"CLOTHING\"\r\n            }\r\n        ],\r\n        \"pageable\": {\r\n            \"pageNumber\": 0,\r\n            \"pageSize\": 20,\r\n            \"sort\": {\r\n                \"empty\": true,\r\n                \"sorted\": false,\r\n                \"unsorted\": true\r\n            },\r\n            \"offset\": 0,\r\n            \"paged\": true,\r\n            \"unpaged\": false\r\n        },\r\n        \"last\": false,\r\n        \"totalElements\": 220,\r\n        \"totalPages\": 11,\r\n        \"size\": 20,\r\n        \"number\": 0,\r\n        \"sort\": {\r\n            \"empty\": true,\r\n            \"sorted\": false,\r\n            \"unsorted\": true\r\n        },\r\n        \"first\": true,\r\n        \"numberOfElements\": 20,\r\n        \"empty\": false\r\n    }\r\n}"
+						},
+						{
+							"name": "View All Products - Valid - Empty",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{product-catalog}}/products",
+									"host": [
+										"{{product-catalog}}"
+									],
+									"path": [
+										"products"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "{\r\n    \"code\": 200,\r\n    \"message\": \"Success\",\r\n    \"result\": {\r\n        \"content\": [],\r\n        \"pageable\": {\r\n            \"pageNumber\": 0,\r\n            \"pageSize\": 20,\r\n            \"sort\": {\r\n                \"empty\": true,\r\n                \"sorted\": false,\r\n                \"unsorted\": true\r\n            },\r\n            \"offset\": 0,\r\n            \"paged\": true,\r\n            \"unpaged\": false\r\n        },\r\n        \"last\": true,\r\n        \"totalPages\": 0,\r\n        \"totalElements\": 0,\r\n        \"size\": 20,\r\n        \"number\": 0,\r\n        \"sort\": {\r\n            \"empty\": true,\r\n            \"sorted\": false,\r\n            \"unsorted\": true\r\n        },\r\n        \"first\": true,\r\n        \"numberOfElements\": 0,\r\n        \"empty\": true\r\n    }\r\n}"
+						}
+					]
+				},
+				{
+					"name": "Create New Product",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{product-catalog}}/products",
+							"host": [
+								"{{product-catalog}}"
+							],
+							"path": [
+								"products"
+							]
+						},
+						"description": "- This API is used to create a new product in system. The product data is sent in the request body.\n    \n- This requests tests successfully cases and errors cases such as an empty/duplicate/too short/too long product name, an empty/too long description, an empty/negative/zero/too high price, and an empty/invalid category."
+					},
+					"response": [
+						{
+							"name": "Create New Product - Valid",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Test Product\",\r\n    \"description\": \"Test description\",\r\n    \"price\": 100.0,\r\n    \"category\": \"ELECTRONICS\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{product-catalog}}/products",
+									"host": [
+										"{{product-catalog}}"
+									],
+									"path": [
+										"products"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"code\": 201,\n    \"message\": \"Success\",\n    \"result\": {\n        \"message\": \"Create product successfully!\"\n    }\n}"
+						},
+						{
+							"name": "Create New Product - Blank Name",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"name\": \"\",\r\n  \"description\": \"Valid description\",\r\n  \"price\": 50,\r\n  \"category\": \"BOOKS\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{product-catalog}}/products",
+									"host": [
+										"{{product-catalog}}"
+									],
+									"path": [
+										"products"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"code\": 400,\n    \"errors\": [\n        \"Product name cannot be blank\",\n        \"Product name must be between 2 and 100 characters\"\n    ]\n}"
+						},
+						{
+							"name": "Create New Product - Duplicate name",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"iPhone 15 Pro Max\",\r\n    \"description\": \"Apple\",\r\n    \"price\": 1000,\r\n    \"category\": \"HOME\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{product-catalog}}/products",
+									"host": [
+										"{{product-catalog}}"
+									],
+									"path": [
+										"products"
+									]
+								}
+							},
+							"status": "Conflict",
+							"code": 409,
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "{\r\n    \"code\": 409,\r\n    \"errors\": [\r\n        \"Product already exists\"\r\n    ]\r\n}"
+						},
+						{
+							"name": "Create New Product - Too short name",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"A\",\r\n    \"description\": \"desc\",\r\n    \"price\": 20,\r\n    \"category\": \"FOOD\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{product-catalog}}/products",
+									"host": [
+										"{{product-catalog}}"
+									],
+									"path": [
+										"products"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"code\": 400,\n    \"errors\": [\n        \"Product name must be between 2 and 100 characters\"\n    ]\n}"
+						},
+						{
+							"name": "Create New Product - Too long name",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"A comprehensive nine-step process for planning coding projects covers everything from defining project goals and target users to selecting tech stacks and deployment strategies. The methodology emphasizes starting with clear objectives, writing user stories, designing data models, ruthlessly scoping an MVP, creating simple wireframes, considering future scalability, choosing appropriate architecture, selecting the right technology stack, and following a structured development process. The approach prioritizes planning as a foundation that accelerates development rather than slowing it down, helping developers avoid scope creep, technical debt, and rebuilding work.\",\r\n    \"description\": \"desc\",\r\n    \"price\": 20,\r\n    \"category\": \"FOOD\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{product-catalog}}/products",
+									"host": [
+										"{{product-catalog}}"
+									],
+									"path": [
+										"products"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "{\r\n    \"code\": 400,\r\n    \"errors\": [\r\n        \"Product name must be between 2 and 100 characters\"\r\n    ]\r\n}"
+						},
+						{
+							"name": "Create New Product - Blank Description",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Laptop\",\r\n    \"description\": \"\",\r\n    \"price\": 1000,\r\n    \"category\": \"ELECTRONICS\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{product-catalog}}/products",
+									"host": [
+										"{{product-catalog}}"
+									],
+									"path": [
+										"products"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "{\r\n    \"code\": 400,\r\n    \"errors\": [\r\n        \"Product description cannot be blank\"\r\n    ]\r\n}"
+						},
+						{
+							"name": "Create New Product - Too long description",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Laptop\",\r\n    \"description\": \"A comprehensive nine-step process for planning coding projects covers everything from defining project goals and target users to selecting tech stacks and deployment strategies. The methodology emphasizes starting with clear objectives, writing user stories, designing data models, ruthlessly scoping an MVP, creating simple wireframes, considering future scalability, choosing appropriate architecture, selecting the right technology stack, and following a structured development process. The approach prioritizes planning as a foundation that accelerates development rather than slowing it down, helping developers avoid scope creep, technical debt, and rebuilding work.A survey of Python community experts at PyCon US reveals mixed opinions on AI's impact on programming jobs. Most experts, including Guido van Rossum and other prominent Python developers, believe AI won't replace programmers but will change how they work. While some see AI as useful for boilerplate code and productivity enhancement, others emphasize the continued importance of understanding code fundamentals. The consensus suggests AI will augment rather than replace developers, with junior developers needing to focus on learning and adaptation to remain competitive.\",\r\n    \"price\": 1000,\r\n    \"category\": \"ELECTRONICS\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{product-catalog}}/products",
+									"host": [
+										"{{product-catalog}}"
+									],
+									"path": [
+										"products"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "{\r\n    \"code\": 400,\r\n    \"errors\": [\r\n        \"Description cannot exceed 500 characters\"\r\n    ]\r\n}"
+						},
+						{
+							"name": "Create New Product - Null price",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Book\",\r\n    \"description\": \"Good book\",\r\n    \"price\": null,\r\n    \"category\": \"BOOKS\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{product-catalog}}/products",
+									"host": [
+										"{{product-catalog}}"
+									],
+									"path": [
+										"products"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "{\r\n    \"code\": 400,\r\n    \"errors\": [\r\n        \"Product price cannot be null\"\r\n    ]\r\n}"
+						},
+						{
+							"name": "Create New Product - Zero price",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Cheap item\",\r\n    \"description\": \"Desc\",\r\n    \"price\": 0,\r\n    \"category\": \"FOOD\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{product-catalog}}/products",
+									"host": [
+										"{{product-catalog}}"
+									],
+									"path": [
+										"products"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "{\r\n    \"code\": 400,\r\n    \"errors\": [\r\n        \"Price must be greater than 0\"\r\n    ]\r\n}"
+						},
+						{
+							"name": "Create New Product - Negative price",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Invalid\",\r\n    \"description\": \"desc\",\r\n    \"price\": -10,\r\n    \"category\": \"HOME\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{product-catalog}}/products",
+									"host": [
+										"{{product-catalog}}"
+									],
+									"path": [
+										"products"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "{\r\n    \"code\": 400,\r\n    \"errors\": [\r\n        \"Price must be greater than 0\"\r\n    ]\r\n}"
+						},
+						{
+							"name": "Create New Product - Exceed max (>999999.99)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Luxury Car\",\r\n    \"description\": \"Very expensive car\",\r\n    \"price\": 1000000,\r\n    \"category\": \"PREMIUM\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{product-catalog}}/products",
+									"host": [
+										"{{product-catalog}}"
+									],
+									"path": [
+										"products"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "{\r\n    \"code\": 400,\r\n    \"errors\": [\r\n        \"Price cannot exceed $999,999.99\"\r\n    ]\r\n}"
+						},
+						{
+							"name": "Create New Product - Blank Category",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Shirt\",\r\n    \"description\": \"desc\",\r\n    \"price\": 20,\r\n    \"category\": \"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{product-catalog}}/products",
+									"host": [
+										"{{product-catalog}}"
+									],
+									"path": [
+										"products"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "{\r\n    \"code\": 400,\r\n    \"errors\": [\r\n        \"Category must be one of: ELECTRONICS, CLOTHING, FOOD, BOOKS, HOME, PREMIUM\",\r\n        \"Product category cannot be blank\"\r\n    ]\r\n}"
+						},
+						{
+							"name": "Create New Product - Invalid value",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Shirt\",\r\n    \"description\": \"desc\",\r\n    \"price\": 20,\r\n    \"category\": \"TOY\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{product-catalog}}/products",
+									"host": [
+										"{{product-catalog}}"
+									],
+									"path": [
+										"products"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "{\r\n    \"code\": 400,\r\n    \"errors\": [\r\n        \"Category must be one of: ELECTRONICS, CLOTHING, FOOD, BOOKS, HOME, PREMIUM\"\r\n    ]\r\n}"
+						}
+					]
+				},
+				{
+					"name": "Update product",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{product-catalog}}/products/productId",
+							"host": [
+								"{{product-catalog}}"
+							],
+							"path": [
+								"products",
+								"productId"
+							]
+						},
+						"description": "- This API is used to update the information of an existing product in the system, based on its `productId`.\n    \n- This request tests cases for successful updates, duplicate product names, invalid `productId`, and product not found."
+					},
+					"response": [
+						{
+							"name": "Update product - Valid",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"iPhone 15 Pro\",\r\n    \"description\": \"Apple flagship smartphone with A17 chip\",\r\n    \"price\": 1299.99,\r\n    \"category\": \"ELECTRONICS\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{product-catalog}}/products/68ad8b8f1f76bd5e1eb753b9",
+									"host": [
+										"{{product-catalog}}"
+									],
+									"path": [
+										"products",
+										"68ad8b8f1f76bd5e1eb753b9"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "{\r\n    \"code\": 200,\r\n    \"message\": \"Success\",\r\n    \"result\": {\r\n        \"message\": \"Update product successfully!\"\r\n    }\r\n}"
+						},
+						{
+							"name": "Update product - Duplicate product name",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"iPhone 15 Pro\",\r\n    \"description\": \"Latest Samsung flagship\",\r\n    \"price\": 1299.99,\r\n    \"category\": \"ELECTRONICS\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{product-catalog}}/products/productId",
+									"host": [
+										"{{product-catalog}}"
+									],
+									"path": [
+										"products",
+										"productId"
+									]
+								}
+							},
+							"status": "Conflict",
+							"code": 409,
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "{\r\n    \"code\": 409,\r\n    \"errors\": [\r\n        \"Product already exists\"\r\n    ]\r\n}"
+						},
+						{
+							"name": "Update product - invalid ObjectId",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Samsung Galaxy S25\",\r\n    \"description\": \"Latest Samsung flagship\",\r\n    \"price\": 1299.99,\r\n    \"category\": \"ELECTRONICS\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{product-catalog}}/products/1",
+									"host": [
+										"{{product-catalog}}"
+									],
+									"path": [
+										"products",
+										"1"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "{\r\n    \"code\": 400,\r\n    \"errors\": [\r\n        \"Invalid productId format. Must be a valid Mongo ObjectId\"\r\n    ]\r\n}"
+						},
+						{
+							"name": "Update product - Not found case",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Samsung Galaxy S25\",\r\n    \"description\": \"Latest Samsung flagship\",\r\n    \"price\": 1299.99,\r\n    \"category\": \"ELECTRONICS\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{product-catalog}}/products/1",
+									"host": [
+										"{{product-catalog}}"
+									],
+									"path": [
+										"products",
+										"1"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "{\r\n    \"code\": 404,\r\n    \"errors\": [\r\n        \"Product not found\"\r\n    ]\r\n}"
+						},
+						{
+							"name": "Update product - Too short name",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"name\": \"A\",\r\n  \"description\": \"desc\",\r\n  \"price\": 20,\r\n  \"category\": \"FOOD\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{product-catalog}}/products/68aae2cfcb79c11df8cda5ec",
+									"host": [
+										"{{product-catalog}}"
+									],
+									"path": [
+										"products",
+										"68aae2cfcb79c11df8cda5ec"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "{\r\n    \"code\": 400,\r\n    \"errors\": [\r\n        \"Product name must be between 2 and 100 characters\"\r\n    ]\r\n}"
+						},
+						{
+							"name": "Update product - Description blank",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Valid Name\",\r\n    \"description\": \"\",\r\n    \"price\": 100,\r\n    \"category\": \"BOOKS\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{product-catalog}}/products/68aae2cfcb79c11df8cda5ec",
+									"host": [
+										"{{product-catalog}}"
+									],
+									"path": [
+										"products",
+										"68aae2cfcb79c11df8cda5ec"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "{\r\n    \"code\": 400,\r\n    \"errors\": [\r\n        \"Product description cannot be blank\"\r\n    ]\r\n}"
+						},
+						{
+							"name": "Update product - Exceed Price",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"name\": \"Luxury Car\",\r\n  \"description\": \"Expensive\",\r\n  \"price\": 1000000,\r\n  \"category\": \"PREMIUM\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{product-catalog}}/products/68aae2cfcb79c11df8cda5ec",
+									"host": [
+										"{{product-catalog}}"
+									],
+									"path": [
+										"products",
+										"68aae2cfcb79c11df8cda5ec"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "{\r\n    \"code\": 400,\r\n    \"errors\": [\r\n        \"Price cannot exceed $999,999.99\"\r\n    ]\r\n}"
+						},
+						{
+							"name": "Update product - Invalid category",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"name\": \"Shirt\",\r\n  \"description\": \"Blue shirt\",\r\n  \"price\": 50,\r\n  \"category\": \"TOYS\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{product-catalog}}/products/68aae2cfcb79c11df8cda5ec",
+									"host": [
+										"{{product-catalog}}"
+									],
+									"path": [
+										"products",
+										"68aae2cfcb79c11df8cda5ec"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "{\r\n    \"code\": 400,\r\n    \"errors\": [\r\n        \"Category must be one of: ELECTRONICS, CLOTHING, FOOD, BOOKS, HOME, PREMIUM\"\r\n    ]\r\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete product by productID",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{product-catalog}}/products/productId",
+							"host": [
+								"{{product-catalog}}"
+							],
+							"path": [
+								"products",
+								"productId"
+							]
+						},
+						"description": "- This API is used to delete a product from the catalog based on its `productId`.\n    \n- This request tests cases for successful deletion, invalid `productId`, and product not found."
+					},
+					"response": [
+						{
+							"name": "Delete product by productID - Valid",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{product-catalog}}/products/68ab02d98321e47a8bae053a",
+									"host": [
+										"{{product-catalog}}"
+									],
+									"path": [
+										"products",
+										"68ab02d98321e47a8bae053a"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "{\r\n    \"code\": 200,\r\n    \"message\": \"Success\"\r\n}"
+						},
+						{
+							"name": "Delete product by productID - Invalid Product ID",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{product-catalog}}/products/1",
+									"host": [
+										"{{product-catalog}}"
+									],
+									"path": [
+										"products",
+										"1"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "{\r\n    \"code\": 400,\r\n    \"errors\": [\r\n        \"Invalid productId format. Must be a valid Mongo ObjectId\"\r\n    ]\r\n}"
+						},
+						{
+							"name": "Delete product by productID - Product ID not found",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{product-catalog}}/products/68ab00c78321e47a8bae0539",
+									"host": [
+										"{{product-catalog}}"
+									],
+									"path": [
+										"products",
+										"68ab00c78321e47a8bae0539"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "{\r\n    \"code\": 404,\r\n    \"errors\": [\r\n        \"Product not found\"\r\n    ]\r\n}"
+						}
+					]
+				}
+			],
+			"description": "This is a folder containing requests related to CRUD (Create, Read, Update, Delete) operations on a single product/list of products."
+		},
+		{
+			"name": "Filter/Sort Product",
+			"item": [
+				{
+					"name": "Sort Product with Param",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{product-catalog}}/products/sort",
+							"host": [
+								"{{product-catalog}}"
+							],
+							"path": [
+								"products",
+								"sort"
+							],
+							"query": [
+								{
+									"key": "category",
+									"value": "BOOKS",
+									"disabled": true
+								},
+								{
+									"key": "field",
+									"value": "price",
+									"disabled": true
+								},
+								{
+									"key": "direction",
+									"value": "DESC",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "0",
+									"disabled": true
+								},
+								{
+									"key": "size",
+									"value": "10",
+									"disabled": true
+								}
+							]
+						},
+						"description": "- This API allows for filtering products by category and sorting the results by name or price, in either ascending or descending order (ASC/DESC).\n    \n- This request tests successful cases for filtering and sorting."
+					},
+					"response": [
+						{
+							"name": "Base Case",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{product-catalog}}/products/sort?page=1&size=2",
+									"host": [
+										"{{product-catalog}}"
+									],
+									"path": [
+										"products",
+										"sort"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "size",
+											"value": "2"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "",
+							"header": [],
+							"cookie": [
+								{
+									"expires": "Invalid Date",
+									"domain": "",
+									"path": ""
+								}
+							],
+							"body": "{\r\n    \"code\": 200,\r\n    \"message\": \"Success\",\r\n    \"result\": {\r\n        \"content\": [\r\n            {\r\n                \"id\": \"68b2f3f6d8d00296671c9e57\",\r\n                \"name\": \"Sony WH-1000XM5\",\r\n                \"description\": \"Noise cancelling wireless headphones\",\r\n                \"price\": 399.99,\r\n                \"category\": \"ELECTRONICS\"\r\n            },\r\n            {\r\n                \"id\": \"68b2f3f6d8d00296671c9e58\",\r\n                \"name\": \"Dell XPS 13\",\r\n                \"description\": \"Premium ultrabook laptop\",\r\n                \"price\": 1499.99,\r\n                \"category\": \"ELECTRONICS\"\r\n            }\r\n        ],\r\n        \"pageable\": {\r\n            \"pageNumber\": 1,\r\n            \"pageSize\": 2,\r\n            \"sort\": {\r\n                \"empty\": true,\r\n                \"sorted\": false,\r\n                \"unsorted\": true\r\n            },\r\n            \"offset\": 2,\r\n            \"paged\": true,\r\n            \"unpaged\": false\r\n        },\r\n        \"last\": false,\r\n        \"totalElements\": 60,\r\n        \"totalPages\": 30,\r\n        \"size\": 2,\r\n        \"number\": 1,\r\n        \"sort\": {\r\n            \"empty\": true,\r\n            \"sorted\": false,\r\n            \"unsorted\": true\r\n        },\r\n        \"first\": false,\r\n        \"numberOfElements\": 2,\r\n        \"empty\": false\r\n    }\r\n}"
+						},
+						{
+							"name": "Sort Name ASC - Valid",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{product-catalog}}/products/sort?field=NAME&direction=ASC&page=0&size=5",
+									"host": [
+										"{{product-catalog}}"
+									],
+									"path": [
+										"products",
+										"sort"
+									],
+									"query": [
+										{
+											"key": "field",
+											"value": "NAME"
+										},
+										{
+											"key": "direction",
+											"value": "ASC"
+										},
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "size",
+											"value": "5"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "{\r\n    \"code\": 200,\r\n    \"message\": \"Success\",\r\n    \"result\": {\r\n        \"content\": [\r\n            {\r\n                \"id\": \"68b2f3f6d8d00296671c9e61\",\r\n                \"name\": \"Adidas Ultraboost\",\r\n                \"description\": \"Comfortable running shoes\",\r\n                \"price\": 180.0,\r\n                \"category\": \"CLOTHING\"\r\n            },\r\n            {\r\n                \"id\": \"68b2f3f6d8d00296671c9e5b\",\r\n                \"name\": \"Apple Watch Series 9\",\r\n                \"description\": \"Smartwatch with health tracking\",\r\n                \"price\": 499.99,\r\n                \"category\": \"ELECTRONICS\"\r\n            },\r\n            {\r\n                \"id\": \"68b2f3f6d8d00296671c9e74\",\r\n                \"name\": \"Atomic Habits\",\r\n                \"description\": \"Self-improvement bestseller\",\r\n                \"price\": 19.99,\r\n                \"category\": \"BOOKS\"\r\n            },\r\n            {\r\n                \"id\": \"68b2f3f6d8d00296671c9e8c\",\r\n                \"name\": \"Bang & Olufsen Speaker\",\r\n                \"description\": \"Premium wireless speaker\",\r\n                \"price\": 2499.99,\r\n                \"category\": \"PREMIUM\"\r\n            },\r\n            {\r\n                \"id\": \"68b2f3f6d8d00296671c9e71\",\r\n                \"name\": \"Barilla Spaghetti\",\r\n                \"description\": \"Italian pasta pack\",\r\n                \"price\": 2.99,\r\n                \"category\": \"FOOD\"\r\n            }\r\n        ],\r\n        \"pageable\": {\r\n            \"pageNumber\": 0,\r\n            \"pageSize\": 5,\r\n            \"sort\": {\r\n                \"empty\": true,\r\n                \"sorted\": false,\r\n                \"unsorted\": true\r\n            },\r\n            \"offset\": 0,\r\n            \"paged\": true,\r\n            \"unpaged\": false\r\n        },\r\n        \"last\": false,\r\n        \"totalPages\": 12,\r\n        \"totalElements\": 60,\r\n        \"size\": 5,\r\n        \"number\": 0,\r\n        \"sort\": {\r\n            \"empty\": true,\r\n            \"sorted\": false,\r\n            \"unsorted\": true\r\n        },\r\n        \"first\": true,\r\n        \"numberOfElements\": 5,\r\n        \"empty\": false\r\n    }\r\n}"
+						},
+						{
+							"name": "Sort Name DESC - Valid",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{product-catalog}}/products/sort?field=NAME&direction=DESC&page=0&size=5",
+									"host": [
+										"{{product-catalog}}"
+									],
+									"path": [
+										"products",
+										"sort"
+									],
+									"query": [
+										{
+											"key": "field",
+											"value": "NAME"
+										},
+										{
+											"key": "direction",
+											"value": "DESC"
+										},
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "size",
+											"value": "5"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "{\r\n    \"code\": 200,\r\n    \"message\": \"Success\",\r\n    \"result\": {\r\n        \"content\": [\r\n            {\r\n                \"id\": \"68b2f3f6d8d00296671c9e55\",\r\n                \"name\": \"iPhone 15 Pro\",\r\n                \"description\": \"Apple flagship smartphone with A17 chip\",\r\n                \"price\": 1199.99,\r\n                \"category\": \"ELECTRONICS\"\r\n            },\r\n            {\r\n                \"id\": \"68b2f3f6d8d00296671c9e59\",\r\n                \"name\": \"iPad Air\",\r\n                \"description\": \"Apple tablet with M1 chip\",\r\n                \"price\": 699.99,\r\n                \"category\": \"ELECTRONICS\"\r\n            },\r\n            {\r\n                \"id\": \"68b2f3f6d8d00296671c9e63\",\r\n                \"name\": \"Zara Blazer\",\r\n                \"description\": \"Slim-fit formal blazer\",\r\n                \"price\": 149.99,\r\n                \"category\": \"CLOTHING\"\r\n            },\r\n            {\r\n                \"id\": \"68b2f3f6d8d00296671c9e62\",\r\n                \"name\": \"Uniqlo Supima T-Shirt\",\r\n                \"description\": \"Soft cotton t-shirt\",\r\n                \"price\": 19.99,\r\n                \"category\": \"CLOTHING\"\r\n            },\r\n            {\r\n                \"id\": \"68b2f3f6d8d00296671c9e76\",\r\n                \"name\": \"The Pragmatic Programmer\",\r\n                \"description\": \"Software craftsmanship book\",\r\n                \"price\": 45.99,\r\n                \"category\": \"BOOKS\"\r\n            }\r\n        ],\r\n        \"pageable\": {\r\n            \"pageNumber\": 0,\r\n            \"pageSize\": 5,\r\n            \"sort\": {\r\n                \"empty\": true,\r\n                \"sorted\": false,\r\n                \"unsorted\": true\r\n            },\r\n            \"offset\": 0,\r\n            \"paged\": true,\r\n            \"unpaged\": false\r\n        },\r\n        \"last\": false,\r\n        \"totalPages\": 12,\r\n        \"totalElements\": 60,\r\n        \"size\": 5,\r\n        \"number\": 0,\r\n        \"sort\": {\r\n            \"empty\": true,\r\n            \"sorted\": false,\r\n            \"unsorted\": true\r\n        },\r\n        \"first\": true,\r\n        \"numberOfElements\": 5,\r\n        \"empty\": false\r\n    }\r\n}"
+						},
+						{
+							"name": "Sort Price ASC - Valid",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{product-catalog}}/products/sort?direction=ASC&page=0&field=PRICE&size=5",
+									"host": [
+										"{{product-catalog}}"
+									],
+									"path": [
+										"products",
+										"sort"
+									],
+									"query": [
+										{
+											"key": "category",
+											"value": "sample",
+											"disabled": true
+										},
+										{
+											"key": "field",
+											"value": "sample",
+											"disabled": true
+										},
+										{
+											"key": "direction",
+											"value": "ASC"
+										},
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "size",
+											"value": "10",
+											"disabled": true
+										},
+										{
+											"key": "field",
+											"value": "PRICE"
+										},
+										{
+											"key": "size",
+											"value": "5"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "{\r\n    \"code\": 200,\r\n    \"message\": \"Success\",\r\n    \"result\": {\r\n        \"content\": [\r\n            {\r\n                \"id\": \"68b2f3f6d8d00296671c9e71\",\r\n                \"name\": \"Barilla Spaghetti\",\r\n                \"description\": \"Italian pasta pack\",\r\n                \"price\": 2.99,\r\n                \"category\": \"FOOD\"\r\n            },\r\n            {\r\n                \"id\": \"68b2f3f6d8d00296671c9e6b\",\r\n                \"name\": \"Lay’s Classic Chips\",\r\n                \"description\": \"Potato chips snack\",\r\n                \"price\": 3.99,\r\n                \"category\": \"FOOD\"\r\n            },\r\n            {\r\n                \"id\": \"68b2f3f6d8d00296671c9e6f\",\r\n                \"name\": \"Oreo Cookies\",\r\n                \"description\": \"Chocolate sandwich biscuits\",\r\n                \"price\": 4.49,\r\n                \"category\": \"FOOD\"\r\n            },\r\n            {\r\n                \"id\": \"68b2f3f6d8d00296671c9e6d\",\r\n                \"name\": \"Heinz Ketchup\",\r\n                \"description\": \"Tomato ketchup bottle\",\r\n                \"price\": 4.99,\r\n                \"category\": \"FOOD\"\r\n            },\r\n            {\r\n                \"id\": \"68b2f3f6d8d00296671c9e6a\",\r\n                \"name\": \"Kellogg’s Corn Flakes\",\r\n                \"description\": \"Breakfast cereal\",\r\n                \"price\": 5.49,\r\n                \"category\": \"FOOD\"\r\n            }\r\n        ],\r\n        \"pageable\": {\r\n            \"pageNumber\": 0,\r\n            \"pageSize\": 5,\r\n            \"sort\": {\r\n                \"empty\": true,\r\n                \"sorted\": false,\r\n                \"unsorted\": true\r\n            },\r\n            \"offset\": 0,\r\n            \"paged\": true,\r\n            \"unpaged\": false\r\n        },\r\n        \"last\": false,\r\n        \"totalPages\": 12,\r\n        \"totalElements\": 60,\r\n        \"size\": 5,\r\n        \"number\": 0,\r\n        \"sort\": {\r\n            \"empty\": true,\r\n            \"sorted\": false,\r\n            \"unsorted\": true\r\n        },\r\n        \"first\": true,\r\n        \"numberOfElements\": 5,\r\n        \"empty\": false\r\n    }\r\n}"
+						},
+						{
+							"name": "Sort Price DESC - Valid",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{product-catalog}}/products/sort?page=0&field=PRICE&direction=DESC&size=5",
+									"host": [
+										"{{product-catalog}}"
+									],
+									"path": [
+										"products",
+										"sort"
+									],
+									"query": [
+										{
+											"key": "category",
+											"value": "sample",
+											"disabled": true
+										},
+										{
+											"key": "field",
+											"value": "sample",
+											"disabled": true
+										},
+										{
+											"key": "direction",
+											"value": "ASC",
+											"disabled": true
+										},
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "size",
+											"value": "10",
+											"disabled": true
+										},
+										{
+											"key": "field",
+											"value": "PRICE"
+										},
+										{
+											"key": "direction",
+											"value": "DESC"
+										},
+										{
+											"key": "size",
+											"value": "5"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "{\r\n    \"code\": 200,\r\n    \"message\": \"Success\",\r\n    \"result\": {\r\n        \"content\": [\r\n            {\r\n                \"id\": \"68b2f3f6d8d00296671c9e8a\",\r\n                \"name\": \"Tesla Model S Plaid\",\r\n                \"description\": \"High-performance electric car\",\r\n                \"price\": 89999.99,\r\n                \"category\": \"PREMIUM\"\r\n            },\r\n            {\r\n                \"id\": \"68b2f3f6d8d00296671c9e87\",\r\n                \"name\": \"Rolex Submariner\",\r\n                \"description\": \"Luxury Swiss watch\",\r\n                \"price\": 12999.99,\r\n                \"category\": \"PREMIUM\"\r\n            },\r\n            {\r\n                \"id\": \"68b2f3f6d8d00296671c9e90\",\r\n                \"name\": \"Macallan 25 Years\",\r\n                \"description\": \"Premium Scotch whisky\",\r\n                \"price\": 9999.99,\r\n                \"category\": \"PREMIUM\"\r\n            },\r\n            {\r\n                \"id\": \"68b2f3f6d8d00296671c9e8f\",\r\n                \"name\": \"Cartier Bracelet\",\r\n                \"description\": \"Fine jewelry piece\",\r\n                \"price\": 6499.99,\r\n                \"category\": \"PREMIUM\"\r\n            },\r\n            {\r\n                \"id\": \"68b2f3f6d8d00296671c9e88\",\r\n                \"name\": \"Louis Vuitton Handbag\",\r\n                \"description\": \"Designer leather bag\",\r\n                \"price\": 3499.99,\r\n                \"category\": \"PREMIUM\"\r\n            }\r\n        ],\r\n        \"pageable\": {\r\n            \"pageNumber\": 0,\r\n            \"pageSize\": 5,\r\n            \"sort\": {\r\n                \"empty\": true,\r\n                \"sorted\": false,\r\n                \"unsorted\": true\r\n            },\r\n            \"offset\": 0,\r\n            \"paged\": true,\r\n            \"unpaged\": false\r\n        },\r\n        \"last\": false,\r\n        \"totalPages\": 12,\r\n        \"totalElements\": 60,\r\n        \"size\": 5,\r\n        \"number\": 0,\r\n        \"sort\": {\r\n            \"empty\": true,\r\n            \"sorted\": false,\r\n            \"unsorted\": true\r\n        },\r\n        \"first\": true,\r\n        \"numberOfElements\": 5,\r\n        \"empty\": false\r\n    }\r\n}"
+						},
+						{
+							"name": "Filter + Sort - Valid",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{product-catalog}}/products/sort?category=BOOKS&field=PRICE&direction=DESC&page=0&size=5",
+									"host": [
+										"{{product-catalog}}"
+									],
+									"path": [
+										"products",
+										"sort"
+									],
+									"query": [
+										{
+											"key": "category",
+											"value": "BOOKS"
+										},
+										{
+											"key": "field",
+											"value": "PRICE"
+										},
+										{
+											"key": "direction",
+											"value": "DESC"
+										},
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "size",
+											"value": "5"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "{\r\n    \"code\": 200,\r\n    \"message\": \"Success\",\r\n    \"result\": {\r\n        \"content\": [\r\n            {\r\n                \"id\": \"68b2f3f6d8d00296671c9e73\",\r\n                \"name\": \"Harry Potter Box Set\",\r\n                \"description\": \"Complete 7-book series\",\r\n                \"price\": 89.99,\r\n                \"category\": \"BOOKS\"\r\n            },\r\n            {\r\n                \"id\": \"68b2f3f6d8d00296671c9e75\",\r\n                \"name\": \"Clean Code\",\r\n                \"description\": \"Programming practices by Robert C. Martin\",\r\n                \"price\": 49.99,\r\n                \"category\": \"BOOKS\"\r\n            },\r\n            {\r\n                \"id\": \"68b2f3f6d8d00296671c9e76\",\r\n                \"name\": \"The Pragmatic Programmer\",\r\n                \"description\": \"Software craftsmanship book\",\r\n                \"price\": 45.99,\r\n                \"category\": \"BOOKS\"\r\n            },\r\n            {\r\n                \"id\": \"68b2f3f6d8d00296671c9e79\",\r\n                \"name\": \"The Lean Startup\",\r\n                \"description\": \"Startup methodology\",\r\n                \"price\": 27.99,\r\n                \"category\": \"BOOKS\"\r\n            },\r\n            {\r\n                \"id\": \"68b2f3f6d8d00296671c9e7b\",\r\n                \"name\": \"Sapiens\",\r\n                \"description\": \"History of humankind\",\r\n                \"price\": 24.99,\r\n                \"category\": \"BOOKS\"\r\n            }\r\n        ],\r\n        \"pageable\": {\r\n            \"pageNumber\": 0,\r\n            \"pageSize\": 5,\r\n            \"sort\": {\r\n                \"empty\": true,\r\n                \"sorted\": false,\r\n                \"unsorted\": true\r\n            },\r\n            \"offset\": 0,\r\n            \"paged\": true,\r\n            \"unpaged\": false\r\n        },\r\n        \"last\": false,\r\n        \"totalPages\": 2,\r\n        \"totalElements\": 10,\r\n        \"size\": 5,\r\n        \"number\": 0,\r\n        \"sort\": {\r\n            \"empty\": true,\r\n            \"sorted\": false,\r\n            \"unsorted\": true\r\n        },\r\n        \"first\": true,\r\n        \"numberOfElements\": 5,\r\n        \"empty\": false\r\n    }\r\n}"
+						},
+						{
+							"name": "Sort field - Invalid",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{product-catalog}}/products/sort?page=0&field=WRONG&size=5",
+									"host": [
+										"{{product-catalog}}"
+									],
+									"path": [
+										"products",
+										"sort"
+									],
+									"query": [
+										{
+											"key": "category",
+											"value": "sample",
+											"disabled": true
+										},
+										{
+											"key": "field",
+											"value": "sample",
+											"disabled": true
+										},
+										{
+											"key": "direction",
+											"value": "ASC",
+											"disabled": true
+										},
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "size",
+											"value": "10",
+											"disabled": true
+										},
+										{
+											"key": "field",
+											"value": "WRONG"
+										},
+										{
+											"key": "size",
+											"value": "5"
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "{\r\n    \"code\": 400,\r\n    \"errors\": [\r\n        \"Parameter 'field' has invalid value 'WRONG'\"\r\n    ]\r\n}"
+						}
+					]
+				},
+				{
+					"name": "Filter Product with Param",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{product-catalog}}/products/filter",
+							"host": [
+								"{{product-catalog}}"
+							],
+							"path": [
+								"products",
+								"filter"
+							],
+							"query": [
+								{
+									"key": "category",
+									"value": "HOME",
+									"disabled": true
+								},
+								{
+									"key": "field",
+									"value": "null",
+									"disabled": true
+								},
+								{
+									"key": "direction",
+									"value": "null",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "0",
+									"disabled": true
+								},
+								{
+									"key": "size",
+									"value": "20",
+									"disabled": true
+								}
+							]
+						},
+						"description": "- This API is used to filter products by a specific category.\n    \n- This request tests cases for successful filtering, invalid categories, and when no products are found in that category."
+					},
+					"response": [
+						{
+							"name": "Only Filter - Valid - MISS",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{product-catalog}}/products/filter?category=HOME&page=0&size=20",
+									"host": [
+										"{{product-catalog}}"
+									],
+									"path": [
+										"products",
+										"filter"
+									],
+									"query": [
+										{
+											"key": "category",
+											"value": "HOME"
+										},
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "size",
+											"value": "20"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "{\r\n    \"code\": 200,\r\n    \"message\": \"Success\",\r\n    \"result\": {\r\n        \"content\": [\r\n            {\r\n                \"id\": \"68b2f3f6d8d00296671c9e7e\",\r\n                \"name\": \"Dyson V15 Vacuum\",\r\n                \"description\": \"Cordless vacuum cleaner\",\r\n                \"price\": 699.99,\r\n                \"category\": \"HOME\"\r\n            },\r\n            {\r\n                \"id\": \"68b2f3f6d8d00296671c9e7d\",\r\n                \"name\": \"Ikea Billy Bookcase\",\r\n                \"description\": \"Classic bookshelf\",\r\n                \"price\": 79.99,\r\n                \"category\": \"HOME\"\r\n            },\r\n            {\r\n                \"id\": \"68b2f3f6d8d00296671c9e83\",\r\n                \"name\": \"Ikea Malm Bed Frame\",\r\n                \"description\": \"Modern queen bed\",\r\n                \"price\": 299.99,\r\n                \"category\": \"HOME\"\r\n            },\r\n            {\r\n                \"id\": \"68b2f3f6d8d00296671c9e80\",\r\n                \"name\": \"Instant Pot\",\r\n                \"description\": \"Electric pressure cooker\",\r\n                \"price\": 119.99,\r\n                \"category\": \"HOME\"\r\n            },\r\n            {\r\n                \"id\": \"68b2f3f6d8d00296671c9e84\",\r\n                \"name\": \"KitchenAid Mixer\",\r\n                \"description\": \"Stand mixer for baking\",\r\n                \"price\": 399.99,\r\n                \"category\": \"HOME\"\r\n            },\r\n            {\r\n                \"id\": \"68b2f3f6d8d00296671c9e81\",\r\n                \"name\": \"Nespresso Machine\",\r\n                \"description\": \"Coffee maker with pods\",\r\n                \"price\": 169.99,\r\n                \"category\": \"HOME\"\r\n            },\r\n            {\r\n                \"id\": \"68b2f3f6d8d00296671c9e7f\",\r\n                \"name\": \"Philips Air Fryer\",\r\n                \"description\": \"Healthy oil-free cooking\",\r\n                \"price\": 249.99,\r\n                \"category\": \"HOME\"\r\n            },\r\n            {\r\n                \"id\": \"68b2f3f6d8d00296671c9e86\",\r\n                \"name\": \"Samsung 55\\\" Smart TV\",\r\n                \"description\": \"4K Ultra HD television\",\r\n                \"price\": 699.99,\r\n                \"category\": \"HOME\"\r\n            },\r\n            {\r\n                \"id\": \"68b2f3f6d8d00296671c9e85\",\r\n                \"name\": \"Scented Candle Set\",\r\n                \"description\": \"Relaxing home fragrance\",\r\n                \"price\": 29.99,\r\n                \"category\": \"HOME\"\r\n            },\r\n            {\r\n                \"id\": \"68b2f3f6d8d00296671c9e82\",\r\n                \"name\": \"Tefal Cookware Set\",\r\n                \"description\": \"Non-stick kitchen pans\",\r\n                \"price\": 199.99,\r\n                \"category\": \"HOME\"\r\n            }\r\n        ],\r\n        \"pageable\": {\r\n            \"pageNumber\": 0,\r\n            \"pageSize\": 20,\r\n            \"sort\": {\r\n                \"empty\": true,\r\n                \"sorted\": false,\r\n                \"unsorted\": true\r\n            },\r\n            \"offset\": 0,\r\n            \"paged\": true,\r\n            \"unpaged\": false\r\n        },\r\n        \"last\": true,\r\n        \"totalElements\": 10,\r\n        \"totalPages\": 1,\r\n        \"size\": 20,\r\n        \"number\": 0,\r\n        \"sort\": {\r\n            \"empty\": true,\r\n            \"sorted\": false,\r\n            \"unsorted\": true\r\n        },\r\n        \"first\": true,\r\n        \"numberOfElements\": 10,\r\n        \"empty\": false\r\n    }\r\n}"
+						},
+						{
+							"name": "Only Filter - Valid - HIT",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{product-catalog}}/products/filter?category=HOME&page=0&size=20",
+									"host": [
+										"{{product-catalog}}"
+									],
+									"path": [
+										"products",
+										"filter"
+									],
+									"query": [
+										{
+											"key": "category",
+											"value": "HOME"
+										},
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "size",
+											"value": "20"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "{\r\n    \"code\": 200,\r\n    \"message\": \"Success (Cached)\",\r\n    \"result\": {\r\n        \"content\": [\r\n            {\r\n                \"id\": \"68b8287575f12411b3150502\",\r\n                \"name\": \"Roomba i7+ Robot Vacuum\",\r\n                \"description\": \"Self-emptying robot vacuum\",\r\n                \"price\": 599.99,\r\n                \"category\": \"HOME\"\r\n            },\r\n            {\r\n                \"id\": \"68b8287575f12411b315050b\",\r\n                \"name\": \"Nestlé Coffee Machine\",\r\n                \"description\": \"Single-serve coffee and espresso maker\",\r\n                \"price\": 159.99,\r\n                \"category\": \"HOME\"\r\n            },\r\n            {\r\n                \"id\": \"68b8287575f12411b315050c\",\r\n                \"name\": \"Ikea Kallax Shelf Unit\",\r\n                \"description\": \"Modular shelving unit\",\r\n                \"price\": 119.99,\r\n                \"category\": \"HOME\"\r\n            },\r\n            {\r\n                \"id\": \"68b8287575f12411b315050d\",\r\n                \"name\": \"Black & Decker Drill Set\",\r\n                \"description\": \"Cordless power drill kit\",\r\n                \"price\": 69.99,\r\n                \"category\": \"HOME\"\r\n            },\r\n            {\r\n                \"id\": \"68b8287575f12411b3150511\",\r\n                \"name\": \"Ninja Professional Blender\",\r\n                \"description\": \"High-speed blender\",\r\n                \"price\": 99.99,\r\n                \"category\": \"HOME\"\r\n            },\r\n            {\r\n                \"id\": \"68b8287575f12411b3150512\",\r\n                \"name\": \"Sodastream\",\r\n                \"description\": \"Home sparkling water maker\",\r\n                \"price\": 89.99,\r\n                \"category\": \"HOME\"\r\n            },\r\n            {\r\n                \"id\": \"68b8287575f12411b315051a\",\r\n                \"name\": \"Cuisinart Food Processor\",\r\n                \"description\": \"Multi-function food processor\",\r\n                \"price\": 149.99,\r\n                \"category\": \"HOME\"\r\n            },\r\n            {\r\n                \"id\": \"68b8287575f12411b31504f8\",\r\n                \"name\": \"Ikea Billy Bookcase\",\r\n                \"description\": \"Classic bookshelf\",\r\n                \"price\": 79.99,\r\n                \"category\": \"HOME\"\r\n            },\r\n            {\r\n                \"id\": \"68b8287575f12411b31504f9\",\r\n                \"name\": \"Dyson V15 Vacuum\",\r\n                \"description\": \"Cordless vacuum cleaner\",\r\n                \"price\": 699.99,\r\n                \"category\": \"HOME\"\r\n            },\r\n            {\r\n                \"id\": \"68b8287575f12411b31504fa\",\r\n                \"name\": \"Philips Air Fryer\",\r\n                \"description\": \"Healthy oil-free cooking\",\r\n                \"price\": 249.99,\r\n                \"category\": \"HOME\"\r\n            },\r\n            {\r\n                \"id\": \"68b8287575f12411b31504fc\",\r\n                \"name\": \"Nespresso Machine\",\r\n                \"description\": \"Coffee maker with pods\",\r\n                \"price\": 169.99,\r\n                \"category\": \"HOME\"\r\n            },\r\n            {\r\n                \"id\": \"68b8287575f12411b31504fe\",\r\n                \"name\": \"Ikea Malm Bed Frame\",\r\n                \"description\": \"Modern queen bed\",\r\n                \"price\": 299.99,\r\n                \"category\": \"HOME\"\r\n            },\r\n            {\r\n                \"id\": \"68b8287575f12411b3150503\",\r\n                \"name\": \"Keurig K-Elite Coffee Maker\",\r\n                \"description\": \"Single-serve coffee maker\",\r\n                \"price\": 129.99,\r\n                \"category\": \"HOME\"\r\n            },\r\n            {\r\n                \"id\": \"68b8287575f12411b3150507\",\r\n                \"name\": \"Cuisinart Toaster Oven\",\r\n                \"description\": \"Countertop convection toaster oven\",\r\n                \"price\": 99.99,\r\n                \"category\": \"HOME\"\r\n            },\r\n            {\r\n                \"id\": \"68b8287575f12411b3150508\",\r\n                \"name\": \"Casper Original Mattress\",\r\n                \"description\": \"Memory foam mattress in a box\",\r\n                \"price\": 1095.0,\r\n                \"category\": \"HOME\"\r\n            },\r\n            {\r\n                \"id\": \"68b8287575f12411b31504fd\",\r\n                \"name\": \"Tefal Cookware Set\",\r\n                \"description\": \"Non-stick kitchen pans\",\r\n                \"price\": 199.99,\r\n                \"category\": \"HOME\"\r\n            },\r\n            {\r\n                \"id\": \"68b8287575f12411b3150510\",\r\n                \"name\": \"Crock-Pot Slow Cooker\",\r\n                \"description\": \"Programmable slow cooker\",\r\n                \"price\": 59.99,\r\n                \"category\": \"HOME\"\r\n            },\r\n            {\r\n                \"id\": \"68b8287575f12411b3150513\",\r\n                \"name\": \"Bissell SpotClean Pro\",\r\n                \"description\": \"Portable carpet and upholstery cleaner\",\r\n                \"price\": 139.99,\r\n                \"category\": \"HOME\"\r\n            },\r\n            {\r\n                \"id\": \"68b8287575f12411b3150515\",\r\n                \"name\": \"Wyze Cam v3\",\r\n                \"description\": \"Indoor/outdoor smart home camera\",\r\n                \"price\": 35.99,\r\n                \"category\": \"HOME\"\r\n            },\r\n            {\r\n                \"id\": \"68b8287575f12411b3150516\",\r\n                \"name\": \"Weber Spirit II E-310\",\r\n                \"description\": \"Propane gas grill\",\r\n                \"price\": 549.0,\r\n                \"category\": \"HOME\"\r\n            }\r\n        ],\r\n        \"pageable\": {\r\n            \"pageNumber\": 0,\r\n            \"pageSize\": 20,\r\n            \"sort\": {\r\n                \"empty\": true,\r\n                \"sorted\": false,\r\n                \"unsorted\": true\r\n            },\r\n            \"offset\": 0,\r\n            \"paged\": true,\r\n            \"unpaged\": false\r\n        },\r\n        \"last\": false,\r\n        \"totalElements\": 35,\r\n        \"totalPages\": 2,\r\n        \"size\": 20,\r\n        \"number\": 0,\r\n        \"sort\": {\r\n            \"empty\": true,\r\n            \"sorted\": false,\r\n            \"unsorted\": true\r\n        },\r\n        \"first\": true,\r\n        \"numberOfElements\": 20,\r\n        \"empty\": false\r\n    }\r\n}"
+						},
+						{
+							"name": "Filter Category - Invalid",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{product-catalog}}/products/filter?page=0&category=NOT_EXIST&size=5",
+									"host": [
+										"{{product-catalog}}"
+									],
+									"path": [
+										"products",
+										"filter"
+									],
+									"query": [
+										{
+											"key": "category",
+											"value": "sample",
+											"disabled": true
+										},
+										{
+											"key": "field",
+											"value": "sample",
+											"disabled": true
+										},
+										{
+											"key": "direction",
+											"value": "ASC",
+											"disabled": true
+										},
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "size",
+											"value": "10",
+											"disabled": true
+										},
+										{
+											"key": "category",
+											"value": "NOT_EXIST"
+										},
+										{
+											"key": "size",
+											"value": "5"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": "{\r\n    \"code\": 200,\r\n    \"message\": \"Success\",\r\n    \"result\": {\r\n        \"content\": [],\r\n        \"pageable\": {\r\n            \"pageNumber\": 0,\r\n            \"pageSize\": 5,\r\n            \"sort\": {\r\n                \"empty\": true,\r\n                \"sorted\": false,\r\n                \"unsorted\": true\r\n            },\r\n            \"offset\": 0,\r\n            \"paged\": true,\r\n            \"unpaged\": false\r\n        },\r\n        \"last\": true,\r\n        \"totalPages\": 0,\r\n        \"totalElements\": 0,\r\n        \"size\": 5,\r\n        \"number\": 0,\r\n        \"sort\": {\r\n            \"empty\": true,\r\n            \"sorted\": false,\r\n            \"unsorted\": true\r\n        },\r\n        \"first\": true,\r\n        \"numberOfElements\": 0,\r\n        \"empty\": true\r\n    }\r\n}"
+						}
+					]
+				}
+			],
+			"description": "This is a folder containing requests related to filtering and sorting products."
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "product-catalog",
+			"value": "localhost:8083/product-catalog",
+			"type": "default"
+		}
+	]
+}

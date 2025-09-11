@@ -1,9 +1,9 @@
-// app.js
+// app.js - Fixed version
 
 const BASE_URL = "http://localhost:8083/product-catalog";
 
 let currentPage = 0;
-let pageSize = 20;;
+let pageSize = 20;
 let editingId = null;
 let currentSort = { field: null, direction: null };
 let currentCategory = "";
@@ -34,6 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Filter category
     document.getElementById("filter-category").addEventListener("change", (e) => {
         currentCategory = e.target.value;
+        currentPage = 0; // Reset về trang đầu
         fetchProducts();
     });
 
@@ -52,18 +53,21 @@ document.addEventListener("DOMContentLoaded", () => {
 async function fetchProducts(page = currentPage) {
     try {
         toggleLoading(true);
-        let url = `${BASE_URL}/products?page=${page}&size=${pageSize}`;
+        let url = "";
 
-        // Nếu có sort/filter
-        if (currentSort.field || currentCategory) {
-            const params = new URLSearchParams();
-            if (currentCategory) params.append("category", currentCategory);
-            if (currentSort.field) params.append("field", currentSort.field);
-            if (currentSort.direction) params.append("direction", currentSort.direction);
-            params.append("page", page);
-            params.append("size", pageSize);
-            url = `${BASE_URL}/products/filter?${params.toString()}`;
+        // LOGIC PHÂN BIỆT ENDPOINT
+        if (hasSort()) {
+            // Có sort -> dùng /products/sort (không cache)
+            url = buildSortUrl(page);
+        } else if (hasFilter()) {
+            // Chỉ filter category -> dùng /products/filter (có cache)
+            url = buildFilterUrl(page);
+        } else {
+            // Không có gì -> dùng /products (có cache)
+            url = buildDefaultUrl(page);
         }
+
+        console.log("Fetching from:", url);
 
         const res = await fetch(url);
         const data = await res.json();
@@ -79,6 +83,37 @@ async function fetchProducts(page = currentPage) {
     } finally {
         toggleLoading(false);
     }
+}
+
+// HELPER FUNCTIONS FOR URL BUILDING
+function hasSort() {
+    return currentSort.field !== null && currentSort.direction !== null;
+}
+
+function hasFilter() {
+    return currentCategory && currentCategory !== "";
+}
+
+function buildDefaultUrl(page) {
+    return `${BASE_URL}/products?page=${page}&size=${pageSize}`;
+}
+
+function buildFilterUrl(page) {
+    const params = new URLSearchParams();
+    params.append("category", currentCategory);
+    params.append("page", page);
+    params.append("size", pageSize);
+    return `${BASE_URL}/products/filter?${params.toString()}`;
+}
+
+function buildSortUrl(page) {
+    const params = new URLSearchParams();
+    if (currentCategory) params.append("category", currentCategory);
+    params.append("field", currentSort.field);
+    params.append("direction", currentSort.direction);
+    params.append("page", page);
+    params.append("size", pageSize);
+    return `${BASE_URL}/products/sort?${params.toString()}`;
 }
 
 async function createProduct(product) {
@@ -171,7 +206,6 @@ function renderProducts(products) {
     `;
         cards.insertAdjacentHTML("beforeend", card);
     });
-
 }
 
 function renderPagination(totalPages, current) {
@@ -238,6 +272,8 @@ function toggleSort(field) {
             currentSort.direction = "ASC";
         }
     }
+
+    currentPage = 0; // Reset về trang đầu khi sort
     updateSortIcons();
     fetchProducts();
 }
@@ -251,18 +287,17 @@ function updateSortIcons() {
     priceIcon.className = "fas fa-sort";
 
     if (currentSort.field === "NAME") {
-        nameIcon.className = currentSort.direction === "ASC" 
-            ? "fas fa-sort-amount-up" 
+        nameIcon.className = currentSort.direction === "ASC"
+            ? "fas fa-sort-amount-up"
             : "fas fa-sort-amount-down";
     }
 
     if (currentSort.field === "PRICE") {
-        priceIcon.className = currentSort.direction === "ASC" 
-            ? "fas fa-sort-amount-up" 
+        priceIcon.className = currentSort.direction === "ASC"
+            ? "fas fa-sort-amount-up"
             : "fas fa-sort-amount-down";
     }
 }
-
 
 function toggleLoading(show) {
     const spinner = document.getElementById("loading-spinner");
