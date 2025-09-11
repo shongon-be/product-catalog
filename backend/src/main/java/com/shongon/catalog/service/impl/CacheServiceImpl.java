@@ -24,7 +24,7 @@ public class CacheServiceImpl implements ICacheService {
     final ObjectMapper objectMapper;
 
     @Value("${app.cache-prefix}")
-    public String cachePrefix;
+    private String cachePrefix;
 
     @Override
     public <T> T getFromCache(String key, TypeReference<T> typeRef) {
