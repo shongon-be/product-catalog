@@ -1,12 +1,16 @@
 package com.shongon.catalog.unit;
 
 import com.shongon.catalog.controller.ProductController;
+import com.shongon.catalog.dto.cache.CacheablePage;
 import com.shongon.catalog.dto.request.CreateProductRequest;
 import com.shongon.catalog.dto.request.UpdateProductRequest;
 import com.shongon.catalog.dto.response.*;
+import com.shongon.catalog.enums.SortField;
 import com.shongon.catalog.exception.ErrorCode;
 import com.shongon.catalog.exception.ProductCatalogException;
+import com.shongon.catalog.service.ICacheService;
 import com.shongon.catalog.service.IProductService;
+import com.shongon.catalog.service.ISortFilterService;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,6 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
@@ -31,6 +36,12 @@ public class ProductControllerTest {
 
     @Mock
     private IProductService productService;
+
+    @Mock
+    private ISortFilterService sortFilterService;
+
+    @Mock
+    private ICacheService cacheService;
 
     private final String VALID_ID = "68aae2cfcb79c11df8cda5ed";
     private final String INVALID_ID = "123";
@@ -371,4 +382,185 @@ public class ProductControllerTest {
                 () -> productController.deleteProduct(VALID_ID));
         verify(productService).deleteProduct(VALID_ID);
     }
+
+    // FILTER PRODUCTS (service only, ignore cache because tested separately)
+    @Test
+    void filterProductsByCategory_shouldReturnsResult() {
+        PageRequest pageable = PageRequest.of(0, 10);
+        Page<ViewAllProductsResponse> page =
+                new PageImpl<>(List.of(product1, product2), pageable, 2);
+
+        when(sortFilterService.filterAndSortProducts(eq("FOOD"), isNull(), isNull(), eq(pageable)))
+                .thenReturn(page);
+
+        ApiResponse<Page<ViewAllProductsResponse>> response =
+                productController.filterProductsByCategory("FOOD", pageable);
+
+        assertEquals(200, response.getCode());
+        assertEquals("Success", response.getMessage());
+        assertEquals(2, response.getResult().getContent().size());
+
+        verify(sortFilterService).filterAndSortProducts(eq("FOOD"), isNull(), isNull(), eq(pageable));
+    }
+
+    // SORT PRODUCTS
+    @Test
+    void filterAndSortProduct_shouldReturnsResult() {
+        PageRequest pageable = PageRequest.of(0, 10);
+        Page<ViewAllProductsResponse> page =
+                new PageImpl<>(List.of(product1), pageable, 1);
+
+        when(sortFilterService.filterAndSortProducts(eq("FOOD"),
+                eq(SortField.PRICE),
+                eq(Sort.Direction.DESC),
+                eq(pageable)))
+                .thenReturn(page);
+
+        ApiResponse<Page<ViewAllProductsResponse>> response =
+                productController.filterAndSortProduct("FOOD", SortField.PRICE, Sort.Direction.DESC, pageable);
+
+        assertEquals(200, response.getCode());
+        assertEquals("Success", response.getMessage());
+        assertEquals(1, response.getResult().getContent().size());
+
+        verify(sortFilterService).filterAndSortProducts(eq("FOOD"),
+                eq(SortField.PRICE),
+                eq(Sort.Direction.DESC),
+                eq(pageable));
+    }
+
+    // CACHE TESTS
+    @Test
+    void getAllProducts_cacheHit_returnsCachedData() {
+        PageRequest pageable = PageRequest.of(0, 10);
+        Page<ViewAllProductsResponse> page =
+                new PageImpl<>(List.of(product1), pageable, 1);
+
+        CacheablePage<ViewAllProductsResponse> cachedPage = CacheablePage.from(page);
+
+        when(cacheService.generateCacheKey(any(), any(), any(), any(), any()))
+                .thenReturn("cache-key");
+        when(cacheService.getFromCache(eq("cache-key"), any())).thenReturn(cachedPage);
+
+        ApiResponse<Page<ViewAllProductsResponse>> response =
+                productController.getAllProducts(pageable);
+
+        assertEquals(200, response.getCode());
+        assertEquals("Success (Cached)", response.getMessage());
+        assertEquals(1, response.getResult().getContent().size());
+
+        // Không gọi DB service khi cache hit
+        verify(productService, never()).viewAllProducts(any());
+    }
+
+    @Test
+    void getAllProducts_cacheMiss_fetchesFromDbAndSaves() {
+        PageRequest pageable = PageRequest.of(0, 10);
+        Page<ViewAllProductsResponse> page =
+                new PageImpl<>(List.of(product1, product2), pageable, 2);
+
+        when(cacheService.generateCacheKey(any(), any(), any(), any(), any()))
+                .thenReturn("cache-key");
+        when(cacheService.getFromCache(eq("cache-key"), any())).thenReturn(null);
+        when(productService.viewAllProducts(pageable)).thenReturn(page);
+
+        ApiResponse<Page<ViewAllProductsResponse>> response =
+                productController.getAllProducts(pageable);
+
+        assertEquals(200, response.getCode());
+        assertEquals("Success", response.getMessage());
+        assertEquals(2, response.getResult().getContent().size());
+
+        verify(productService).viewAllProducts(pageable);
+        verify(cacheService).saveToCache(eq("cache-key"), any(CacheablePage.class), any());
+    }
+
+    @Test
+    void filterProductsByCategory_cacheHit_returnsCachedData() {
+        PageRequest pageable = PageRequest.of(0, 10);
+        Page<ViewAllProductsResponse> page =
+                new PageImpl<>(List.of(product1), pageable, 1);
+
+        CacheablePage<ViewAllProductsResponse> cachedPage = CacheablePage.from(page);
+
+        // doReturn thay cho when để tránh Strict stubbing varargs
+        doReturn("filter-key")
+                .when(cacheService)
+                .generateCacheKey(any(), any(), any(), any(), any(), any());
+        when(cacheService.getFromCache(eq("filter-key"), any())).thenReturn(cachedPage);
+
+        ApiResponse<Page<ViewAllProductsResponse>> response =
+                productController.filterProductsByCategory("FOOD", pageable);
+
+        assertEquals(200, response.getCode());
+        assertEquals("Success (Cached)", response.getMessage());
+        assertEquals(1, response.getResult().getContent().size());
+
+        verify(sortFilterService, never()).filterAndSortProducts(any(), any(), any(), any());
+    }
+
+    @Test
+    void filterProductsByCategory_cacheMiss_fetchesFromDbAndSaves() {
+        PageRequest pageable = PageRequest.of(0, 10);
+        Page<ViewAllProductsResponse> page =
+                new PageImpl<>(List.of(product1, product2), pageable, 2);
+
+        // doReturn thay cho when
+        doReturn("filter-key")
+                .when(cacheService)
+                .generateCacheKey(any(), any(), any(), any(), any(), any());
+        when(cacheService.getFromCache(eq("filter-key"), any())).thenReturn(null);
+        when(sortFilterService.filterAndSortProducts(eq("FOOD"), isNull(), isNull(), eq(pageable)))
+                .thenReturn(page);
+
+        ApiResponse<Page<ViewAllProductsResponse>> response =
+                productController.filterProductsByCategory("FOOD", pageable);
+
+        assertEquals(200, response.getCode());
+        assertEquals("Success", response.getMessage());
+        assertEquals(2, response.getResult().getContent().size());
+
+        verify(sortFilterService).filterAndSortProducts(eq("FOOD"), isNull(), isNull(), eq(pageable));
+        verify(cacheService).saveToCache(eq("filter-key"), any(CacheablePage.class), any());
+    }
+
+
+    @Test
+    void createProduct_shouldEvictCache() {
+        CreateProductResponse createResp = new CreateProductResponse();
+        createResp.setMessage("Created!");
+        when(productService.createProduct(createRequest)).thenReturn(createResp);
+        when(cacheService.generateCacheKey("*")).thenReturn("pattern");
+
+        ApiResponse<CreateProductResponse> response = productController.createProduct(createRequest);
+
+        assertEquals(201, response.getCode());
+        verify(cacheService).evictCacheByPattern("pattern");
+    }
+
+    @Test
+    void updateProduct_shouldEvictCache() {
+        UpdateProductResponse updateResp = new UpdateProductResponse();
+        updateResp.setMessage("Updated!");
+        when(productService.updateProduct(VALID_ID, updateRequest)).thenReturn(updateResp);
+        when(cacheService.generateCacheKey("*")).thenReturn("pattern");
+
+        ApiResponse<UpdateProductResponse> response =
+                productController.updateProduct(VALID_ID, updateRequest);
+
+        assertEquals(200, response.getCode());
+        verify(cacheService).evictCacheByPattern("pattern");
+    }
+
+    @Test
+    void deleteProduct_shouldEvictCache() {
+        doNothing().when(productService).deleteProduct(VALID_ID);
+        when(cacheService.generateCacheKey("*")).thenReturn("pattern");
+
+        ApiResponse<Void> response = productController.deleteProduct(VALID_ID);
+
+        assertEquals(200, response.getCode());
+        verify(cacheService).evictCacheByPattern("pattern");
+    }
+
 }

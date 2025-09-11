@@ -1,12 +1,20 @@
 spring:
   data:
-    mongodb:
-      uri: mongodb://localhost:27019/testdb?authSource=admin
+    redis:
+      timeout: 5000ms
+      database: 0
+  cache:
+    redis:
+      time-to-live: 600000
 
 logging:
   level:
+    org.springframework.boot.test.context: DEBUG
     org.springframework.data.mongodb: DEBUG
+    org.springframework.data.redis: DEBUG
     com.shongon.catalog: DEBUG
+    io.lettuce.core: ERROR
+    org.mongodb.driver: ERROR
 
 test:
   cleanup:
