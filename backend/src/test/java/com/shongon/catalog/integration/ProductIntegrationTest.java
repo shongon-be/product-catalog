@@ -6,21 +6,14 @@ import com.shongon.catalog.dto.request.UpdateProductRequest;
 import com.shongon.catalog.model.Product;
 import com.shongon.catalog.repository.ProductRepository;
 import org.bson.types.ObjectId;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
-import org.testcontainers.containers.MongoDBContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.List;
 
@@ -28,24 +21,17 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@Testcontainers
 @SpringBootTest
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 @TestPropertySource(locations = "classpath:application-test.yml")
 @DisplayName("Product Integration Tests")
-public class ProductIntegrationTest {
-
-    @Container
-    static final MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:6.0")
-            .withReuse(true);
-
-    @DynamicPropertySource
-    static void setProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.data.mongodb.uri", mongoDBContainer::getReplicaSetUrl);
-    }
+public class ProductIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
 
     @Autowired
     private ProductRepository productRepository;
@@ -60,8 +46,23 @@ public class ProductIntegrationTest {
     private static final String INVALID_PRODUCT_ID = "66aaa1111111111111111";
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws InterruptedException {
+        Assertions.assertNotNull(redisTemplate.getConnectionFactory());
+        Thread.sleep(500); // chờ Redis ổn định (nếu container vừa lên)
+
+        try {
+            redisTemplate.getConnectionFactory().getConnection().flushAll();
+        } catch (Exception e) {
+            // Retry 1 lần sau 300ms nếu Redis chưa kịp ready
+            Thread.sleep(300);
+            redisTemplate.getConnectionFactory().getConnection().flushAll();
+        }
         productRepository.deleteAll();
+    }
+
+    @AfterAll
+    static void cleanUp(@Autowired RedisTemplate<String, Object> redisTemplate) {
+        redisTemplate.getConnectionFactory().getConnection().close();
     }
 
     // Helper methods - tránh duplicate code
@@ -110,7 +111,7 @@ public class ProductIntegrationTest {
             // When & Then
             mockMvc.perform(get(PRODUCTS_URL)
                             .param("page", "0")
-                            .param("size", "5")
+                            .param("size", "10")
                             .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.code").value(200))
@@ -329,10 +330,10 @@ public class ProductIntegrationTest {
             productRepository.save(savedProduct);
 
             UpdateProductRequest request = new UpdateProductRequest();
-                request.setName("Sample Product");
-                request.setDescription("Sample Description");
-                request.setPrice(10.0);
-                request.setCategory("FOOD");
+            request.setName("Sample Product");
+            request.setDescription("Sample Description");
+            request.setPrice(10.0);
+            request.setCategory("FOOD");
 
             mockMvc.perform(put(PRODUCTS_URL + "/" + existingProduct.getId())
                             .contentType(MediaType.APPLICATION_JSON)
@@ -378,6 +379,101 @@ public class ProductIntegrationTest {
                             .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isNotFound())
                     .andExpect(jsonPath("$.errors").value("Product not found"));
+        }
+    }
+
+    @Nested
+    @DisplayName("Cache Tests")
+    class CacheTests {
+
+        @Test
+        @DisplayName("Should return cached result on second GET all products request (Cache HIT)")
+        void givenProductsInDb_whenGetAllTwice_thenSecondTimeUsesCache() throws Exception {
+            // Given
+            Product product = createSampleProduct(VALID_PRODUCT_ID, "Cached Product");
+            productRepository.save(product);
+
+            // First request -> MISS, fetch DB
+            mockMvc.perform(get(PRODUCTS_URL)
+                            .param("page", "0")
+                            .param("size", "10"))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.message").value("Success"));
+
+            // Second request -> HIT, fetch cache
+            mockMvc.perform(get(PRODUCTS_URL)
+                            .param("page", "0")
+                            .param("size", "10"))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.message").value("Success (Cached)"))
+                    .andExpect(jsonPath("$.result.content[0].name").value("Cached Product"));
+        }
+
+        @Test
+        @DisplayName("Should evict cache after CREATE product")
+        void givenCacheExists_whenCreateProduct_thenCacheEvicted() throws Exception {
+            // Prepare cache by calling GET
+            Product product = createSampleProduct(VALID_PRODUCT_ID, "Before Create");
+            productRepository.save(product);
+
+            mockMvc.perform(get(PRODUCTS_URL).param("page", "0").param("size", "10"))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.message").value("Success"));
+
+            // Create new product -> should evict cache
+            CreateProductRequest request = createValidProductRequest();
+            mockMvc.perform(post(PRODUCTS_URL)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)))
+                    .andExpect(status().isCreated());
+
+            // GET again -> should MISS and reload from DB
+            mockMvc.perform(get(PRODUCTS_URL).param("page", "0").param("size", "10"))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.message").value("Success"));
+        }
+
+        @Test
+        @DisplayName("Should evict cache after UPDATE product")
+        void givenCacheExists_whenUpdateProduct_thenCacheEvicted() throws Exception {
+            Product product = createSampleProduct(VALID_PRODUCT_ID, "Old Name");
+            productRepository.save(product);
+
+            // Warm up cache
+            mockMvc.perform(get(PRODUCTS_URL).param("page", "0").param("size", "10"))
+                    .andExpect(status().isOk());
+
+            // Update product
+            UpdateProductRequest updateReq = createValidUpdateRequest();
+            mockMvc.perform(put(PRODUCT_BY_ID_URL, VALID_PRODUCT_ID)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(updateReq)))
+                    .andExpect(status().isOk());
+
+            // GET again -> MISS and reload
+            mockMvc.perform(get(PRODUCTS_URL).param("page", "0").param("size", "10"))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.message").value("Success"));
+        }
+
+        @Test
+        @DisplayName("Should evict cache after DELETE product")
+        void givenCacheExists_whenDeleteProduct_thenCacheEvicted() throws Exception {
+            Product product = createSampleProduct(VALID_PRODUCT_ID, "To Delete");
+            productRepository.save(product);
+
+            // Warm up cache
+            mockMvc.perform(get(PRODUCTS_URL).param("page", "0").param("size", "10"))
+                    .andExpect(status().isOk());
+
+            // Delete product
+            mockMvc.perform(delete(PRODUCT_BY_ID_URL, VALID_PRODUCT_ID))
+                    .andExpect(status().isOk());
+
+            // GET again -> MISS
+            mockMvc.perform(get(PRODUCTS_URL).param("page", "0").param("size", "10"))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.message").value("Success"));
         }
     }
 }

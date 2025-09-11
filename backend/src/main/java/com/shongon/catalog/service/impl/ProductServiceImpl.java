@@ -94,6 +94,7 @@ public class ProductServiceImpl implements IProductService {
         log.info("Product deleted successfully with id: {}", productId);
     }
 
+    // HELPER PRIVATE METHODS
     private void validateUniqueProductName(String productName) {
         if (productRepository.existsByName(productName)) {
             throw new ProductCatalogException(ErrorCode.PRODUCT_ALREADY_EXISTS);
