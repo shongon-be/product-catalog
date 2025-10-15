@@ -16,7 +16,9 @@ import org.mapstruct.ReportingPolicy;
 @Mapper(componentModel = "spring", unmappedSourcePolicy = ReportingPolicy.IGNORE)
 public interface ProductMapper {
 
+    @Mapping(target = "id", expression = "java(new org.bson.types.ObjectId())")
     Product createProduct(CreateProductRequest request);
+    @Mapping(target = "id", ignore = true)
     void updateProduct(@MappingTarget Product product, UpdateProductRequest request);
 
     @Mapping(target = "message", constant = "Create product successfully!")

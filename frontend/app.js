@@ -322,3 +322,43 @@ function initCategoryOptions() {
         formSelect.appendChild(opt2);
     });
 }
+
+// ===================== SEARCH HANDLER =====================
+
+// Gán sự kiện click cho nút search
+document.getElementById("btn-search").addEventListener("click", () => {
+    const keyword = document.getElementById("search-input").value.trim();
+    if (keyword) {
+        currentPage = 0; // reset về trang đầu mỗi lần search mới
+        fetchSearch(keyword);
+    } else {
+        fetchProducts(); // nếu trống -> load toàn bộ product
+    }
+});
+
+// Hàm fetch search (đúng với Controller hiện tại)
+async function fetchSearch(keyword, page = currentPage) {
+    try {
+        toggleLoading(true);
+
+        const params = new URLSearchParams({
+            keyword,
+            page,
+            size: pageSize
+        });
+
+        const res = await fetch(`${BASE_URL}/products/search?${params.toString()}`);
+        const data = await res.json();
+
+        if (res.ok) {
+            renderProducts(data.result.content);
+            renderPagination(data.result.totalPages, page);
+        } else {
+            console.error("Search error:", data.errors);
+        }
+    } catch (err) {
+        console.error("Error searching products:", err);
+    } finally {
+        toggleLoading(false);
+    }
+}
