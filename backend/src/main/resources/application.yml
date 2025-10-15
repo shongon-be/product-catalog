@@ -6,17 +6,14 @@ server:
 spring:
   application:
     name: catalog-service
-  profiles:
-    active: dev
 
   data:
     mongodb:
       database: ${env.MONGO_DATABASE}
       uri: mongodb+srv://${env.MONGO_USER}:${env.MONGO_PASSWORD}@${env.MONGO_CLUSTER}
     redis:
-      host: localhost
+      host: host.docker.internal
       port: 6379
-      password: ${env.REDIS_PASSWORD}
     cache:
       type: redis
 
