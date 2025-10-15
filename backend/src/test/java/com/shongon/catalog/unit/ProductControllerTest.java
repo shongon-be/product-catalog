@@ -524,7 +524,6 @@ public class ProductControllerTest {
         verify(cacheService).saveToCache(eq("filter-key"), any(CacheablePage.class), any());
     }
 
-
     @Test
     void createProduct_shouldEvictCache() {
         CreateProductResponse createResp = new CreateProductResponse();

@@ -8,6 +8,7 @@ import com.shongon.catalog.dto.response.*;
 import com.shongon.catalog.enums.SortField;
 import com.shongon.catalog.service.ICacheService;
 import com.shongon.catalog.service.IProductService;
+import com.shongon.catalog.service.ISearchService;
 import com.shongon.catalog.service.ISortFilterService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -31,6 +32,7 @@ public class ProductController {
     IProductService productService;
     ISortFilterService sortFilterService;
     ICacheService cacheService;
+    ISearchService searchService;
 
     // CRUD operations
     @GetMapping
@@ -195,6 +197,24 @@ public class ProductController {
                 .result(result)
                 .build();
     }
+
+    @GetMapping("/search")
+    public ApiResponse<Page<ViewAllProductsResponse>> searchProduct(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        log.info("keyword: {}", keyword);
+
+        Page<ViewAllProductsResponse> result = searchService.searchProducts(keyword, page, size, null, null);
+
+        return ApiResponse.<Page<ViewAllProductsResponse>>builder()
+                .code(200)
+                .message("Success")
+                .result(result)
+                .build();
+    }
+
 
     // HELPER PRIVATE METHOD
     private void invalidateProductCache() {
