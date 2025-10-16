@@ -32,11 +32,18 @@
             <!-- UTILS -->
             <div class="product__utils d-flex justify-content-between align-items-center mb-3">
                 <div class="d-flex gap-2">
-                    <!-- <input id="search-input" class="form-control product__search" type="text"
-                        placeholder="Search products..."> -->
+                    <div class="input-group">
+                        <input id="search-input" class="form-control product__search" type="text"
+                            placeholder="Search products...">
+                        <button id="btn-search" class="btn btn-outline-primary">
+                            <i class="fas fa-search"></i> Search
+                        </button>
+                    </div>
+
                     <select id="filter-category" class="form-select product__filter">
                         <option value="">All Categories</option>
                     </select>
+
                     <select id="page-size" class="form-select product__page-size" style="width:auto;">
                         <option value="10">10</option>
                         <option value="20" selected>20</option>
@@ -44,8 +51,10 @@
                         <option value="100">100</option>
                     </select>
                 </div>
+
                 <button id="btn-create" class="btn btn-primary product__btn-create">+ Create</button>
             </div>
+
 
             <!-- PRODUCT TABLE (desktop) -->
             <div class="table-responsive d-none d-md-block">

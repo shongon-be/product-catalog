@@ -10,6 +10,7 @@ import com.shongon.catalog.exception.ErrorCode;
 import com.shongon.catalog.exception.ProductCatalogException;
 import com.shongon.catalog.service.ICacheService;
 import com.shongon.catalog.service.IProductService;
+import com.shongon.catalog.service.ISearchService;
 import com.shongon.catalog.service.ISortFilterService;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,6 +43,9 @@ public class ProductControllerTest {
 
     @Mock
     private ICacheService cacheService;
+
+    @Mock
+    private ISearchService searchService;
 
     private final String VALID_ID = "68aae2cfcb79c11df8cda5ed";
     private final String INVALID_ID = "123";
@@ -524,7 +528,6 @@ public class ProductControllerTest {
         verify(cacheService).saveToCache(eq("filter-key"), any(CacheablePage.class), any());
     }
 
-
     @Test
     void createProduct_shouldEvictCache() {
         CreateProductResponse createResp = new CreateProductResponse();
@@ -563,4 +566,83 @@ public class ProductControllerTest {
         verify(cacheService).evictCacheByPattern("pattern");
     }
 
+    // SEARCH PRODUCTS TESTS
+    @Test
+    void searchProducts_shouldReturnsResult() {
+        // Arrange - Chuẩn bị dữ liệu và giả lập
+        String keyword = "Test Food";
+        int page = 0;
+        int size = 10;
+
+        // Tạo một trang kết quả giả để service trả về
+        Page<ViewAllProductsResponse> expectedPage = new PageImpl<>(List.of(product1, product2));
+
+        // Giả lập rằng khi searchService.searchProducts được gọi với các tham số này...
+        when(searchService.searchProducts(eq(keyword), eq(page), eq(size), isNull(), isNull()))
+                // ...thì sẽ trả về trang kết quả đã chuẩn bị ở trên
+                .thenReturn(expectedPage);
+
+        // Act - Gọi phương thức cần test trong controller
+        ApiResponse<Page<ViewAllProductsResponse>> response = productController.searchProduct(keyword, page, size);
+
+        // Assert - Kiểm tra kết quả
+        assertEquals(200, response.getCode());
+        assertEquals("Success", response.getMessage());
+        assertFalse(response.getResult().isEmpty()); // Kết quả không rỗng
+        assertEquals(2, response.getResult().getTotalElements()); // Có 2 sản phẩm được trả về
+        assertEquals("Test Food Product 1", response.getResult().getContent().get(0).getName());
+
+        // Verify - Đảm bảo rằng phương thức searchProducts đã được gọi đúng 1 lần với đúng tham số
+        verify(searchService).searchProducts(eq(keyword), eq(page), eq(size), isNull(), isNull());
+    }
+
+    @Test
+    void searchProducts_noResultsFound_returnsEmptyPage() {
+        // Arrange
+        String keyword = "nonexistent";
+        int page = 0;
+        int size = 10;
+
+        // Giả lập service trả về một trang rỗng
+        when(searchService.searchProducts(eq(keyword), eq(page), eq(size), isNull(), isNull()))
+                .thenReturn(Page.empty());
+
+        // Act
+        ApiResponse<Page<ViewAllProductsResponse>> response = productController.searchProduct(keyword, page, size);
+
+        // Assert
+        assertEquals(200, response.getCode());
+        assertEquals("Success", response.getMessage());
+        assertTrue(response.getResult().isEmpty()); // Quan trọng: kiểm tra kết quả là rỗng
+
+        // Verify
+        verify(searchService).searchProducts(eq(keyword), eq(page), eq(size), isNull(), isNull());
+    }
+
+    @Test
+    void searchProducts_nullKeyword_returnsAllProducts() {
+        // Arrange
+        int page = 0;
+        int size = 10;
+
+        // We expect a full page of products to be returned now.
+        Page<ViewAllProductsResponse> allProductsPage = new PageImpl<>(List.of(product1, product2));
+
+        // Mock the searchService: when it receives a null keyword,
+        // it should return the full list of products.
+        when(searchService.searchProducts(isNull(), eq(page), eq(size), isNull(), isNull()))
+                .thenReturn(allProductsPage);
+
+        // Act
+        ApiResponse<Page<ViewAllProductsResponse>> response = productController.searchProduct(null, page, size);
+
+        // Assert
+        assertEquals(200, response.getCode());
+        assertEquals("Success", response.getMessage());
+        assertEquals(2, response.getResult().getTotalElements());
+        assertEquals("Test Food Product 1", response.getResult().getContent().get(0).getName());
+
+        // Verify
+        verify(searchService).searchProducts(isNull(), eq(page), eq(size), isNull(), isNull());
+    }
 }

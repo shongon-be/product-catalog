@@ -1,6 +1,5 @@
 package com.shongon.catalog.integration;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shongon.catalog.model.Product;
 import com.shongon.catalog.repository.ProductRepository;
 import org.bson.types.ObjectId;
@@ -32,8 +31,6 @@ public class SortFilterIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
     private ProductRepository productRepository;
-
-    private final ObjectMapper objectMapper = new ObjectMapper();
 
     private static final String SORT_URL = "/products/sort";
     private static final String FILTER_URL = "/products/filter";
