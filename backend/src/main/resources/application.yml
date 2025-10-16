@@ -12,8 +12,7 @@ spring:
       database: ${env.MONGO_DATABASE}
       uri: mongodb+srv://${env.MONGO_USER}:${env.MONGO_PASSWORD}@${env.MONGO_CLUSTER}
     redis:
-      host: host.docker.internal
-      port: 6379
+      url: ${env.REDIS_URL:redis://localhost:6379}
     cache:
       type: redis
 
