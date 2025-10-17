@@ -1,26 +1,29 @@
-# Sử dụng một base image Java chính thức. Chọn phiên bản phù hợp với dự án của bạn.
-FROM openjdk:17-slim
+# Stage 1: Build
+FROM maven:3.9.9-amazoncorretto-17 AS build
 
-# Đặt thư mục làm việc bên trong container
 WORKDIR /app
 
-# Copy file pom.xml và các file cần thiết để build dependencies
+# Copy Maven wrapper và dependencies
 COPY .mvn/ .mvn
-COPY mvnw .
-COPY pom.xml .
+COPY mvnw pom.xml ./
 
-# Tải dependencies về (tận dụng cache layer của Docker)
+# Download dependencies (cache layer)
 RUN ./mvnw dependency:go-offline
 
-# Copy toàn bộ source code của ứng dụng vào
+# Copy source code
 COPY src ./src
 
-# Build ứng dụng, tạo ra file .jar và bỏ qua việc chạy test
+# Build application
 RUN ./mvnw package -DskipTests
 
-# Thiết lập cổng mà ứng dụng sẽ chạy
+# Stage 2: Runtime
+FROM amazoncorretto:17-alpine
+
+WORKDIR /app
+
+# Copy JAR file từ build stage
+COPY --from=build /app/target/backend-*.jar app.jar
+
 EXPOSE 8083
 
-# Lệnh để chạy ứng dụng khi container khởi động
-# Đường dẫn đến file JAR có thể khác tùy vào cấu hình pom.xml của bạn
-ENTRYPOINT ["java", "-jar", "target/catalog-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
