@@ -1,6 +1,5 @@
-// app.js - Fixed version
-
-const BASE_URL = "http://localhost:8083/product-catalog";
+// ===================== GLOBAL VARIABLES =====================
+const BASE_URL = "https://product-catalog-production-1377.up.railway.app/product-catalog";
 
 let currentPage = 0;
 let pageSize = 20;
