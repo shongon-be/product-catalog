@@ -12,26 +12,24 @@
 
 <body class="catalog">
 
-    <!-- HEADER -->
     <header class="catalog__header d-flex align-items-center p-3 bg-dark text-white">
         <h1 class="catalog__title m-0">Vantage</h1>
     </header>
 
-    <!-- MAIN -->
     <main class="catalog__main container my-4">
 
-        <!-- PRODUCT CONTAINER -->
         <section id="product-section" class="product">
 
-            <!-- TITLE -->
             <div class="product__title-container d-flex align-items-center mb-3">
                 <i class="bi bi-box-seam me-2"></i>
                 <h3 class="product__title m-0">Product Catalog 🛒</h3>
             </div>
 
-            <!-- UTILS -->
             <div class="product__utils d-flex justify-content-between align-items-center mb-3">
                 <div class="d-flex gap-2">
+                    <button id="btn-home" class="btn btn-outline-secondary">
+                        <i class="fas fa-home"></i> Home
+                    </button>
                     <div class="input-group">
                         <input id="search-input" class="form-control product__search" type="text"
                             placeholder="Search products...">
@@ -56,7 +54,6 @@
             </div>
 
 
-            <!-- PRODUCT TABLE (desktop) -->
             <div class="table-responsive d-none d-md-block">
                 <table id="product-table" class="table table-striped product__table">
                     <thead>
@@ -74,7 +71,6 @@
                         </tr>
                     </thead>
                     <tbody id="product-table-body">
-                        <!-- Rows dynamically rendered -->
                     </tbody>
                 </table>
                 <div id="empty-state" class="text-center py-3 d-none">No products found</div>
@@ -83,22 +79,16 @@
                 </div>
             </div>
 
-            <!-- PRODUCT CARDS (mobile) -->
             <div id="product-cards" class="d-md-none product__cards">
-                <!-- Cards dynamically rendered -->
             </div>
 
-            <!-- PAGINATION -->
             <nav id="pagination" class="product__pagination mt-3">
                 <ul class="pagination justify-content-center">
-                    <!-- Pagination dynamically rendered -->
                 </ul>
             </nav>
-            <!-- PRODUCT INFO -->
             <div id="product-info" class="text-center text-muted mt-2"></div>
         </section>
 
-        <!-- CREATE/UPDATE FORM (Modal) -->
         <div class="modal fade" id="product-modal" tabindex="-1">
             <div class="modal-dialog">
                 <div class="modal-content product__modal">
@@ -138,7 +128,6 @@
 
     </main>
 
-    <!-- FOOTER -->
     <footer class="catalog__footer text-center py-3 bg-light">
         © 2025 Product Catalog
     </footer>

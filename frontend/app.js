@@ -11,6 +11,11 @@ let currentCategory = "";
 document.addEventListener("DOMContentLoaded", () => {
     fetchProducts();
 
+    // Home button
+    document.getElementById("btn-home").addEventListener("click", () => {
+        resetAndFetch();
+    });
+
     // Create button
     document.getElementById("btn-create").addEventListener("click", () => {
         openCreate();
@@ -47,6 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Init category dropdown
     initCategoryOptions();
 });
+
 
 // ===================== API FUNCTIONS =====================
 async function fetchProducts(page = currentPage) {
@@ -310,16 +316,28 @@ function initCategoryOptions() {
     const formSelect = document.getElementById("product-category");
 
     categories.forEach((c) => {
-        const opt1 = document.createElement("option");
-        opt1.value = c;
-        opt1.textContent = c;
-        filterSelect.appendChild(opt1);
+        const opt1 = new Option(c, c);
+        filterSelect.add(opt1);
 
-        const opt2 = document.createElement("option");
-        opt2.value = c;
-        opt2.textContent = c;
-        formSelect.appendChild(opt2);
+        const opt2 = new Option(c, c);
+        formSelect.add(opt2);
     });
+}
+
+// Reset function (ADDED)
+function resetAndFetch() {
+    // Reset state variables
+    currentPage = 0;
+    currentSort = { field: null, direction: null };
+    currentCategory = "";
+
+    // Reset UI elements
+    document.getElementById("search-input").value = "";
+    document.getElementById("filter-category").value = "";
+
+    // Update icons and fetch all products
+    updateSortIcons();
+    fetchProducts();
 }
 
 // ===================== SEARCH HANDLER =====================
