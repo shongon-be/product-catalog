@@ -35,7 +35,7 @@ Built with **Spring Boot** and designed to showcase **Clean Code practices, Git 
 - **Backend**: Java 17, Spring Boot, Spring Data MongoDB, Spring Validation.
 - **Database**: MongoDB (with custom indexes), Redis (caching).
 - **Testing**: JUnit 5, Mockito, Testcontainers.
-- **Deployment**: Railway for /backend, Netlify for /frontend.
+- **Deployment**: Railway for `/backend`, Netlify for `/frontend`.
 - **Other**: Docker, Lombok, MapStruct, Git, GitHub.
 
 ---
@@ -62,10 +62,11 @@ Built with **Spring Boot** and designed to showcase **Clean Code practices, Git 
 - Caching Layer: Redis with TTL & invalidation strategy
 - Repository Layer: Data persistence (MongoDB).
 - Mapper Layer: DTO ↔ Entity conversion using MapStruct.
-- Diagram:
+
+**Diagram**:
 
 <p align="center">
-  <img src="docs/assets/img/Product-Catalog-System-Diagram-0.2.0.drawio.png" alt="System Architecture diagram" width="400"><br>
+  <img src="docs/assets/img/Product-Catalog-System-Diagram-0.2.0.drawio.png" alt="System Architecture diagram"><br>
   <i>System Architecture Diagram</i>
 </p>
 
